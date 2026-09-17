@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  :root {
+    color-scheme: light dark;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  body { margin: 0; font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>TCS Release Builder</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #FAF7F2; --surface: #FFFFFF; --surface2: #F3EEE5;
+  --ink: #26211A; --muted: #7A7264; --border: #E5DED2;
+  --accent: #C25E00; --accent-ink: #FFFFFF; --accent-soft: #FBEBDB;
+  --ok: #2E7D32; --warnc: #9A6700; --errc: #C62828;
+  --chip-stats: #8A6D00; --chip-battle: #B4470A; --chip-extra: #5B6B9E;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #171310; --surface: #211B15; --surface2: #2A231B;
+    --ink: #EDE6DA; --muted: #9C9284; --border: #382F25;
+    --accent: #FFA047; --accent-ink: #241505; --accent-soft: #33261A;
+    --ok: #7CC47F; --warnc: #E2B93B; --errc: #EF8A80;
+    --chip-stats: #D8B84A; --chip-battle: #F0824A; --chip-extra: #93A7E8;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #171310; --surface: #211B15; --surface2: #2A231B;
+  --ink: #EDE6DA; --muted: #9C9284; --border: #382F25;
+  --accent: #FFA047; --accent-ink: #241505; --accent-soft: #33261A;
+  --ok: #7CC47F; --warnc: #E2B93B; --errc: #EF8A80;
+  --chip-stats: #D8B84A; --chip-battle: #F0824A; --chip-extra: #93A7E8;
+}
+body { background: var(--bg); color: var(--ink); padding-inline: 16px;
+  font: 14px/1.5 system-ui, "Segoe UI", sans-serif; }
+.wrap { max-width: 860px; margin-inline: auto; padding-block: 28px 64px; }
+header h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.01em; text-wrap: balance; }
+header p { margin: 0; color: var(--muted); }
+header .flow { color: var(--muted); font-family: var(--mono); font-size: 12px; margin-top: 10px; }
+section { background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 18px 20px; margin-top: 18px; }
+h2 { font-size: 13px; margin: 0 0 12px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--muted); font-weight: 600; }
+.drop { border: 1.5px dashed var(--border); border-radius: 8px; padding: 18px;
+  text-align: center; color: var(--muted); cursor: pointer; transition: border-color .15s; }
+.drop.over, .drop:hover { border-color: var(--accent); }
+.drop strong { color: var(--ink); }
+.drop input { display: none; }
+.filechip { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono);
+  font-size: 12px; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 4px 10px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); flex: none; }
+.dot.bad { background: var(--errc); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+label.f { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); }
+input[type=text], select { background: var(--surface2); color: var(--ink);
+  border: 1px solid var(--border); border-radius: 6px; padding: 7px 9px; font: inherit;
+  min-width: 0; }
+input[type=text]:focus-visible, select:focus-visible, button:focus-visible,
+.drop:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.rows { display: flex; flex-direction: column; gap: 6px; }
+.row { display: grid; grid-template-columns: auto 1fr auto minmax(120px, 1fr); gap: 8px;
+  align-items: center; padding: 6px 8px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface2); }
+.row.skipped { opacity: 0.55; }
+.row .name { font-family: var(--mono); font-size: 12.5px; overflow-wrap: anywhere; }
+.ud { display: flex; flex-direction: column; gap: 2px; }
+.ud button { padding: 0 6px; line-height: 1.1; font-size: 10px; }
+button { background: var(--surface2); color: var(--ink); border: 1px solid var(--border);
+  border-radius: 6px; padding: 7px 14px; font: inherit; cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent);
+  font-weight: 600; padding: 9px 22px; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.hint { color: var(--muted); font-size: 12px; margin-top: 8px; }
+.badge { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em;
+  border-radius: 4px; padding: 2px 7px; font-weight: 600; }
+.badge.example { background: var(--accent-soft); color: var(--accent); }
+.report { font-family: var(--mono); font-size: 12px; display: flex; flex-direction: column;
+  gap: 4px; margin-top: 10px; }
+.report .li { display: flex; gap: 8px; align-items: baseline; }
+.report .lvl { font-weight: 600; flex: none; }
+.lvl.ERROR { color: var(--errc); } .lvl.WARN { color: var(--warnc); } .lvl.OK { color: var(--ok); }
+.result { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 12px; }
+.result .fname { font-family: var(--mono); font-size: 12.5px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; overflow-wrap: anywhere; }
+#copyArea { width: 100%; height: 140px; font-family: var(--mono); font-size: 11px;
+  background: var(--surface2); color: var(--ink); border: 1px solid var(--border);
+  border-radius: 6px; margin-top: 10px; }
+.toast { font-size: 12.5px; margin-top: 8px; }
+.toast.ok { color: var(--ok); } .toast.err { color: var(--errc); }
+footer { color: var(--muted); font-size: 12px; margin-top: 26px; }
+.rowline { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.spacer { flex: 1 1 auto; }
+.modal { position: fixed; inset: 0; background: rgba(20,14,8,.5); display: grid;
+  place-items: center; padding: 16px; z-index: 50; }
+.modal-panel { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; width: 100%; max-width: 580px; max-height: 84vh; overflow: auto;
+  padding: 20px; box-shadow: 0 18px 50px rgba(0,0,0,.25); }
+.modal-panel h3 { margin: 0 0 4px; font-size: 18px; }
+.modal-panel .sub { color: var(--muted); font-size: 12px; margin: 0 0 16px; }
+.srow { display: grid; grid-template-columns: auto 1fr minmax(120px,auto) auto; gap: 8px;
+  align-items: center; padding: 5px 8px; border: 1px solid var(--border);
+  border-radius: 8px; background: var(--surface2); }
+.srow input[type=text] { background: var(--surface); }
+.swatch { width: 11px; height: 11px; border-radius: 3px; flex: none;
+  border: 1px solid rgba(128,128,128,.5); }
+@media (max-width: 520px) { .srow { grid-template-columns: auto 1fr auto; }
+  .srow select { grid-column: 2 / span 2; } }
+@media (max-width: 520px) { .row { grid-template-columns: auto 1fr; }
+  .row select, .row input { grid-column: 2; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>TCS Release Builder</h1>
+  <p>Package a raw Cheat Engine table into a "The Cheat Script" release &mdash; no Python, nothing to install.</p>
+  <div class="flow">raw .CT &rarr; assign [Stats] / [Battle] / [Extra] &rarr; build &rarr; lint &rarr; download</div>
+</header>
+
+<section>
+  <h2>1 &middot; Raw table</h2>
+  <div class="drop" id="srcDrop" tabindex="0" role="button" aria-label="Choose raw table file">
+    <strong>Drop your raw .CT here</strong> or click to browse<br>
+    <span style="font-size:12px">the work table with your scripts &mdash; not the template</span>
+    <input type="file" id="srcFile" accept=".ct,.CT,.xml">
+  </div>
+  <div class="hint" id="srcStatus"></div>
+  <div class="hint rowline" style="margin-top:10px">
+    <span id="tplStatus">Loading template&hellip;</span>
+    <span class="spacer"></span>
+    <button id="tplLoadBtn">Use my template.ct</button>
+    <button id="tplResetBtn" hidden>Reset to bundled</button>
+    <button id="tplEditBtn" disabled>Update template&hellip;</button>
+    <input type="file" id="tplFile" accept=".ct,.CT,.xml" hidden>
+  </div>
+</section>
+
+<section>
+  <h2>2 &middot; Release info</h2>
+  <div class="grid">
+    <label class="f">Game name <input type="text" id="fGame" value="Last Breath"></label>
+    <label class="f">Game version <input type="text" id="fVer" value="v1.0"></label>
+    <label class="f">Table version <input type="text" id="fTver" value="v1.0"></label>
+    <label class="f">Game exe (auto-attach) <input type="text" id="fExe" value="LastBreath.exe"></label>
+    <label class="f">Init script
+      <select id="fInit">
+        <option value="auto" selected>Auto-detect</option>
+        <option value="none">None (plain AOB scripts)</option>
+        <option value="unity">Unity / mono</option>
+        <option value="dotnet">.NET</option>
+      </select>
+    </label>
+  </div>
+</section>
+
+<section>
+  <h2>3 &middot; Features <span class="badge example" id="exampleBadge">Example &mdash; drop your table to replace</span></h2>
+  <div class="rows" id="rows"></div>
+  <div class="hint">Order here sets the slot order (hotkeys Ctrl/Alt + Numpad follow it). Features marked Skip are left out.</div>
+</section>
+
+<section>
+  <h2>4 &middot; Build</h2>
+  <div class="rowline">
+    <button class="primary" id="buildBtn">Build release table</button>
+    <span class="spacer"></span>
+    <button id="saveCfgBtn">Save config</button>
+    <button id="loadCfgBtn">Load config</button>
+    <input type="file" id="cfgFile" accept=".manifest,.txt" hidden>
+  </div>
+  <div class="hint">A config is a <code>.manifest</code> file &mdash; reload it next version to keep
+    the same categories, renames and slot order (so hotkeys stay put). The Python builder reads it too.</div>
+  <div class="toast" id="buildToast"></div>
+  <div class="result" id="result" hidden>
+    <span class="fname" id="outName"></span>
+    <button id="saveBtn">Save .zip</button>
+    <button id="copyBtn">Copy table XML</button>
+  </div>
+  <textarea id="copyArea" hidden readonly aria-label="Generated table XML"></textarea>
+  <div class="report" id="buildReport"></div>
+</section>
+
+<section>
+  <h2>Lint an existing table</h2>
+  <div class="drop" id="lintDrop" tabindex="0" role="button" aria-label="Choose table to lint">
+    <strong>Drop any .ct here</strong> to check it against the release rules
+    <input type="file" id="lintFile" accept=".ct,.CT,.xml">
+  </div>
+  <div class="report" id="lintReport"></div>
+</section>
+
+<div class="modal" id="tplModal" hidden role="dialog" aria-modal="true" aria-labelledby="tplModalTitle">
+  <div class="modal-panel">
+    <h3 id="tplModalTitle">Update template</h3>
+    <p class="sub">Edits the SPECIAL THANKS list every release is built from. Saved in this
+      browser; export the template to share it with the team and the Python builder.</p>
+
+    <h2>Supporters</h2>
+    <div class="grid" style="margin-bottom:12px">
+      <label class="f">Month
+        <select id="supMonth"></select>
+      </label>
+      <label class="f">Year <input type="text" id="supYear" inputmode="numeric"></label>
+    </div>
+    <label class="f" style="margin-bottom:12px">Note line
+      <input type="text" id="supNote">
+    </label>
+    <div class="rows" id="supRows"></div>
+    <div class="rowline" style="margin-top:10px">
+      <button id="supAddBtn">+ Add supporter</button>
+      <span class="spacer"></span>
+      <span class="hint" id="supCount"></span>
+    </div>
+
+    <div class="rowline" style="margin-top:20px">
+      <button class="primary" id="tplApplyBtn">Apply</button>
+      <button id="tplExportTplBtn">Export template.ct</button>
+      <button id="tplExportBothBtn">Export both (.zip)</button>
+      <span class="spacer"></span>
+      <button id="tplCancelBtn">Cancel</button>
+    </div>
+    <div class="toast" id="tplToast"></div>
+  </div>
+</div>
+
+<footer>
+  Rules enforced: no trailing wildcards &middot; call rel32 displacements masked &middot; offsets &gt; 0x60 want readmem &middot;
+  no Structures / toolbox / leftover slots in releases. AOB uniqueness still needs an in-game rescan.
+</footer>
+</div>
+
+<script src="tcs_core.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+
+  var state = {
+    tpl: null, tplBundled: null, tplIsCustom: false, tplName: 'template.ct',
+    src: null, srcName: null, example: true,
+    entries: [], built: null, supporters: null, draft: null,
+  };
+
+  var EXAMPLE = ['Unlimited Ammo', 'Unlimited Stamina', 'Get HP Address', 'Cap Viral at 90',
+                 'Unlimited Flamethrower Fuel', 'Unlimited Currency', 'Unlimited Item'];
+
+  function guessCat(name) {
+    if (/hp|god|kill|damage|stamina|ammo|fuel|viral|boss|armor|shield|invin/i.test(name)) return 'battle';
+    if (/money|currency|coin|cash|item|exp|xp|gold|shard|resource|point|stock|level/i.test(name)) return 'stats';
+    return 'skip';
+  }
+
+  function setEntries(names) {
+    state.entries = names.map(function (n) {
+      return { src: n, cat: guessCat(n), rel: n };
+    });
+    renderRows();
+  }
+
+  function renderRows() {
+    var box = $('rows');
+    box.textContent = '';
+    state.entries.forEach(function (e, i) {
+      var row = document.createElement('div');
+      row.className = 'row' + (e.cat === 'skip' ? ' skipped' : '');
+      var ud = document.createElement('div'); ud.className = 'ud';
+      [['▲', -1], ['▼', 1]].forEach(function (d) {
+        var b = document.createElement('button');
+        b.textContent = d[0];
+        b.setAttribute('aria-label', d[1] < 0 ? 'Move up' : 'Move down');
+        b.onclick = function () {
+          var j = i + d[1];
+          if (j < 0 || j >= state.entries.length) return;
+          var t = state.entries[i]; state.entries[i] = state.entries[j]; state.entries[j] = t;
+          renderRows();
+        };
+        ud.appendChild(b);
+      });
+      var name = document.createElement('div'); name.className = 'name'; name.textContent = e.src;
+      var sel = document.createElement('select');
+      sel.id = 'cat_' + i;
+      [['stats', '[Stats]'], ['battle', '[Battle]'], ['extra', '[Extra]'], ['skip', 'Skip']]
+        .forEach(function (o) {
+          var op = document.createElement('option');
+          op.value = o[0]; op.textContent = o[1]; op.selected = e.cat === o[0];
+          sel.appendChild(op);
+        });
+      sel.onchange = function () { e.cat = sel.value; renderRows(); };
+      var rel = document.createElement('input');
+      rel.type = 'text'; rel.value = e.rel; rel.id = 'rel_' + i;
+      rel.setAttribute('aria-label', 'Release name');
+      rel.oninput = function () { e.rel = rel.value; };
+      row.appendChild(ud); row.appendChild(name); row.appendChild(sel); row.appendChild(rel);
+      box.appendChild(row);
+    });
+  }
+
+  function readFileInto(input, dropEl, cb) {
+    function handle(file) {
+      if (!file) return;
+      var r = new FileReader();
+      r.onload = function () {
+        var text = String(r.result).replace(/^﻿/, '');
+        cb(file.name, text);
+      };
+      r.readAsText(file);
+    }
+    dropEl.addEventListener('click', function () { input.click(); });
+    dropEl.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); input.click(); }
+    });
+    input.addEventListener('change', function () { handle(input.files[0]); });
+    ['dragover', 'dragenter'].forEach(function (t) {
+      dropEl.addEventListener(t, function (ev) { ev.preventDefault(); dropEl.classList.add('over'); });
+    });
+    ['dragleave', 'drop'].forEach(function (t) {
+      dropEl.addEventListener(t, function (ev) { ev.preventDefault(); dropEl.classList.remove('over'); });
+    });
+    dropEl.addEventListener('drop', function (ev) {
+      handle(ev.dataTransfer.files && ev.dataTransfer.files[0]);
+    });
+  }
+
+  function showReport(el, issues) {
+    el.textContent = '';
+    if (!issues.length) {
+      var li = document.createElement('div'); li.className = 'li';
+      li.innerHTML = '<span class="lvl OK">CLEAN</span><span>no issues found</span>';
+      el.appendChild(li);
+      return;
+    }
+    issues.forEach(function (it) {
+      var li = document.createElement('div'); li.className = 'li';
+      var lvl = document.createElement('span');
+      lvl.className = 'lvl ' + it[0].trim(); lvl.textContent = it[0].trim();
+      var msg = document.createElement('span'); msg.textContent = it[1];
+      li.appendChild(lvl); li.appendChild(msg);
+      el.appendChild(li);
+    });
+  }
+
+  /* ---------------- template source ---------------- */
+
+  function loadStoredTemplate() {
+    try {
+      var raw = localStorage.getItem('tcs.template');
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  }
+  function storeTemplate(obj) {
+    try {
+      if (obj) localStorage.setItem('tcs.template', JSON.stringify(obj));
+      else localStorage.removeItem('tcs.template');
+      return true;
+    } catch (e) { return false; }   // quota or blocked storage: session-only
+  }
+
+  // a usable template must carry the TCS slots the builder fills
+  function looksLikeTemplate(text) {
+    return text.indexOf('<CheatTable') >= 0 && /"TCS\.(S01|B01)"/.test(text);
+  }
+
+  // keepOverride: reuse the supporter edits saved in this browser; a freshly
+  // loaded file instead becomes the source of truth for its own list
+  function applyTemplate(text, custom, name, keepOverride) {
+    state.tpl = text;
+    state.tplIsCustom = !!custom;
+    state.tplName = name;
+    var parsed = TCSCore.parseSupporters(text);
+    if (keepOverride) {
+      state.supporters = loadStoredSupporters() || parsed;
+    } else {
+      state.supporters = parsed;
+      storeSupporters(null);
+    }
+    $('tplEditBtn').disabled = !state.supporters;
+    $('tplResetBtn').hidden = !custom;
+    refreshTplStatus();
+  }
+
+  fetch('template.ct').then(function (r) {
+    if (!r.ok) throw new Error(r.status);
+    return r.text();
+  }).then(function (t) {
+    state.tplBundled = t;
+    var stored = loadStoredTemplate();
+    if (stored && stored.text && looksLikeTemplate(stored.text)) {
+      applyTemplate(stored.text, true, stored.name || 'your template.ct', true);
+    } else {
+      applyTemplate(t, false, 'template.ct (bundled)', true);
+    }
+  }).catch(function () {
+    $('tplStatus').innerHTML = '<span class="filechip"><span class="dot bad"></span>template failed to load &mdash; reload the page</span>';
+  });
+
+  $('tplLoadBtn').addEventListener('click', function () { $('tplFile').click(); });
+  $('tplFile').addEventListener('change', function () {
+    var f = $('tplFile').files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      var text = String(r.result).replace(/^﻿/, '');
+      var toast = $('buildToast');
+      if (!looksLikeTemplate(text)) {
+        toast.className = 'toast err';
+        toast.textContent = 'That is not The Cheat Script template (no TCS.S01/TCS.B01 slots) '
+          + '— load the template, not a game table.';
+        $('tplFile').value = '';
+        return;
+      }
+      applyTemplate(text, true, f.name, false);
+      var kept = storeTemplate({ text: text, name: f.name });
+      toast.className = 'toast ok';
+      toast.textContent = 'Using ' + f.name + (supportersSummary() ? ' — ' + supportersSummary() : '')
+        + (kept ? '. Remembered in this browser.' : '. Too large to remember — this visit only.');
+      $('tplFile').value = '';
+    };
+    r.readAsText(f);
+  });
+
+  $('tplResetBtn').addEventListener('click', function () {
+    if (!state.tplBundled) return;
+    storeTemplate(null);
+    applyTemplate(state.tplBundled, false, 'template.ct (bundled)', false);
+    var toast = $('buildToast');
+    toast.className = 'toast ok';
+    toast.textContent = 'Back to the bundled template.';
+  });
+
+  // ---- raw table
+  readFileInto($('srcFile'), $('srcDrop'), function (name, text) {
+    var entries;
+    try { entries = TCSCore.listTopEntries(text); }
+    catch (e) { $('srcStatus').textContent = 'Could not read that file as a cheat table.'; return; }
+    if (!entries.length) { $('srcStatus').textContent = 'No cheat entries found in that file.'; return; }
+    state.src = text; state.srcName = name; state.example = false;
+    $('exampleBadge').hidden = true;
+    $('srcStatus').innerHTML = '';
+    var chip = document.createElement('span'); chip.className = 'filechip';
+    chip.innerHTML = '<span class="dot"></span>';
+    chip.appendChild(document.createTextNode(name + ' — ' + entries.length + ' top-level entries'));
+    $('srcStatus').appendChild(chip);
+    var base = name.replace(/\.(ct|xml)$/i, '');
+    if (!$('fGame').value || state.exampleMeta !== false) {
+      $('fGame').value = base.replace(/([a-z])([A-Z])/g, '$1 $2');
+      $('fExe').value = base + '.exe';
+      state.exampleMeta = false;
+    }
+    setEntries(entries);
+    $('buildToast').textContent = '';
+  });
+
+  // example initial state
+  setEntries(EXAMPLE);
+
+  // ---- build
+  $('buildBtn').addEventListener('click', function () {
+    var toast = $('buildToast');
+    toast.className = 'toast';
+    if (state.example || !state.src) {
+      toast.className = 'toast err';
+      toast.textContent = 'The feature list is the example — drop your raw table first.';
+      return;
+    }
+    if (!state.tpl) { toast.className = 'toast err'; toast.textContent = 'Template not loaded yet.'; return; }
+    var cfg = currentCfg();
+    cfg.date = new Date().toISOString().slice(0, 10);
+    cfg.supporters = state.supporters;
+    if (!cfg.game || !cfg.version) {
+      toast.className = 'toast err'; toast.textContent = 'Game name and version are required.'; return;
+    }
+    var res;
+    try { res = TCSCore.buildRelease(state.tpl, state.src, cfg); }
+    catch (e) {
+      toast.className = 'toast err';
+      toast.textContent = 'Build failed: ' + e.message;
+      return;
+    }
+    state.built = res;
+    $('result').hidden = false;
+    $('outName').textContent = res.filename;
+    toast.className = 'toast ok';
+    toast.textContent = 'Built — review the lint report, then save.';
+    showReport($('buildReport'), TCSCore.lintTable(res.output));
+    $('copyArea').hidden = true;
+  });
+
+  // ---- zip (stored, no compression) --------------------------------
+  var crcTable = (function () {
+    var t = new Uint32Array(256);
+    for (var n = 0; n < 256; n++) {
+      var c = n;
+      for (var k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      t[n] = c >>> 0;
+    }
+    return t;
+  })();
+  function crc32(bytes) {
+    var c = 0xFFFFFFFF;
+    for (var i = 0; i < bytes.length; i++) c = crcTable[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8);
+    return (c ^ 0xFFFFFFFF) >>> 0;
+  }
+  // stored (uncompressed) zip of one or more text files
+  function makeZip(files) {
+    var enc = new TextEncoder();
+    function u16(v) { return [v & 255, (v >> 8) & 255]; }
+    function u32(v) { return [v & 255, (v >>> 8) & 255, (v >>> 16) & 255, (v >>> 24) & 255]; }
+    var parts = [], entries = [], offset = 0;
+    files.forEach(function (f) {
+      var nameB = enc.encode(f.name), data = enc.encode(f.text), crc = crc32(data);
+      var local = [].concat([0x50, 0x4B, 3, 4], u16(20), u16(0), u16(0), u16(0), u16(0),
+        u32(crc), u32(data.length), u32(data.length), u16(nameB.length), u16(0));
+      parts.push(new Uint8Array(local), nameB, data);
+      entries.push({ nameB: nameB, crc: crc, len: data.length, off: offset });
+      offset += local.length + nameB.length + data.length;
+    });
+    var cd = [], cdLen = 0;
+    entries.forEach(function (c) {
+      var h = [].concat([0x50, 0x4B, 1, 2], u16(20), u16(20), u16(0), u16(0), u16(0), u16(0),
+        u32(c.crc), u32(c.len), u32(c.len), u16(c.nameB.length), u16(0), u16(0),
+        u16(0), u16(0), u32(0), u32(c.off));
+      cd.push(new Uint8Array(h), c.nameB);
+      cdLen += h.length + c.nameB.length;
+    });
+    var end = [].concat([0x50, 0x4B, 5, 6], u16(0), u16(0),
+      u16(files.length), u16(files.length), u32(cdLen), u32(offset), u16(0));
+    return new Blob(parts.concat(cd).concat([new Uint8Array(end)]),
+                    { type: 'application/zip' });
+  }
+
+  // Inside a claude.ai artifact the page must route saves through the
+  // downloads capability (the sandbox blocks <a download>); on an ordinary
+  // host (GitHub Pages, a local server) a plain anchor download is used.
+  var IN_ARTIFACT = !!(window.claude && window.claude.use);
+
+  function anchorDownload(filename, blob) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 10000);
+  }
+
+  // offer a file to the viewer; falls back to the copy box when saving is blocked
+  function offerFile(filename, blobOrText, toastEl) {
+    var data = typeof blobOrText === 'string'
+      ? new Blob([blobOrText], { type: 'text/plain' }) : blobOrText;
+    if (!IN_ARTIFACT) {
+      try {
+        anchorDownload(filename, data);
+        toastEl.className = 'toast ok';
+        toastEl.textContent = 'Downloaded ' + filename;
+        return Promise.resolve();
+      } catch (e) {
+        toastEl.className = 'toast err';
+        toastEl.textContent = 'Download failed — use "Copy table XML" instead.';
+        return Promise.reject(e);
+      }
+    }
+    return window.claude.use('downloads')
+      .then(function (dl) {
+        if (!dl) throw { code: 'unavailable' };
+        return dl.save({ filename: filename, data: data });
+      })
+      .then(function () {
+        toastEl.className = 'toast ok';
+        toastEl.textContent = 'Saved ' + filename;
+      })
+      .catch(function (e) {
+        toastEl.className = 'toast err';
+        toastEl.textContent = (e && e.code === 'declined')
+          ? 'Save cancelled.'
+          : 'Saving is unavailable here — use "Copy table XML" instead.';
+        throw e;
+      });
+  }
+
+  // the artifact sandbox has no .ct in its allowlist, so there it ships zipped;
+  // on an ordinary host the table downloads as a .ct directly
+  $('saveBtn').textContent = IN_ARTIFACT ? 'Save .zip' : 'Save .ct';
+  $('saveBtn').addEventListener('click', function () {
+    if (!state.built) return;
+    if (IN_ARTIFACT) {
+      var zipName = state.built.filename.replace(/\.ct$/i, '') + '.zip';
+      offerFile(zipName, makeZip([{ name: state.built.filename, text: state.built.output }]),
+                $('buildToast')).catch(function () {});
+    } else {
+      offerFile(state.built.filename, state.built.output, $('buildToast'))
+        .catch(function () {});
+    }
+  });
+
+  $('copyBtn').addEventListener('click', function () {
+    if (!state.built) return;
+    var toast = $('buildToast');
+    var area = $('copyArea');
+    function fallback() {
+      area.hidden = false; area.value = state.built.output; area.focus(); area.select();
+      toast.className = 'toast';
+      toast.textContent = 'Press Ctrl+C to copy, then paste into a file named ' + state.built.filename;
+    }
+    try {
+      navigator.clipboard.writeText(state.built.output).then(function () {
+        toast.className = 'toast ok';
+        toast.textContent = 'Copied — paste into a file named ' + state.built.filename;
+      }, fallback);
+    } catch (e) { fallback(); }
+  });
+
+  /* ---------------- build config (.manifest) ---------------- */
+
+  function currentCfg() {
+    var cfg = {
+      game: $('fGame').value.trim(), version: $('fVer').value.trim(),
+      table: $('fTver').value.trim() || 'v1.0', exe: $('fExe').value.trim(),
+      init: $('fInit').value, source: state.srcName || '',
+      stats: [], battle: [], extra: [],
+    };
+    state.entries.forEach(function (e) {
+      if (e.cat !== 'skip') cfg[e.cat].push([e.src, (e.rel || e.src).trim()]);
+    });
+    return cfg;
+  }
+
+  function manifestName() {
+    var base = ($('fGame').value.trim() || 'table').replace(/[^\w.-]+/g, '_');
+    return base.toLowerCase() + '.manifest';
+  }
+
+  $('saveCfgBtn').addEventListener('click', function () {
+    var cfg = currentCfg();
+    if (!cfg.game || !cfg.version) {
+      var t = $('buildToast');
+      t.className = 'toast err';
+      t.textContent = 'Game name and version are required before saving a config.';
+      return;
+    }
+    offerFile(manifestName(), TCSCore.serializeManifest(cfg), $('buildToast'))
+      .catch(function () {});
+  });
+
+  $('loadCfgBtn').addEventListener('click', function () { $('cfgFile').click(); });
+  $('cfgFile').addEventListener('change', function () {
+    var f = $('cfgFile').files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      var toast = $('buildToast');
+      var cfg;
+      try { cfg = TCSCore.parseManifest(String(r.result)); }
+      catch (e) {
+        toast.className = 'toast err';
+        toast.textContent = 'Could not read that config file.';
+        return;
+      }
+      if (cfg.game) $('fGame').value = cfg.game;
+      if (cfg.version) $('fVer').value = cfg.version;
+      if (cfg.table) $('fTver').value = cfg.table;
+      if (cfg.exe) $('fExe').value = cfg.exe;
+      if (cfg.init) $('fInit').value = cfg.init;
+      state.exampleMeta = false;
+
+      // re-apply categories/renames/order to the loaded table's entries
+      var known = {};
+      state.entries.forEach(function (e) { known[e.src] = e; });
+      var ordered = [], seen = {};
+      ['stats', 'battle', 'extra'].forEach(function (cat) {
+        (cfg[cat] || []).forEach(function (pair) {
+          var e = known[pair[0]];
+          if (!e) return;
+          e.cat = cat; e.rel = pair[1]; ordered.push(e); seen[pair[0]] = true;
+        });
+      });
+      var missing = [];
+      ['stats', 'battle', 'extra'].forEach(function (cat) {
+        (cfg[cat] || []).forEach(function (pair) {
+          if (!known[pair[0]]) missing.push(pair[0]);
+        });
+      });
+      state.entries.forEach(function (e) {
+        if (!seen[e.src]) { e.cat = 'skip'; ordered.push(e); }
+      });
+      state.entries = ordered;
+      renderRows();
+      toast.className = missing.length ? 'toast err' : 'toast ok';
+      toast.textContent = missing.length
+        ? 'Config loaded, but this table has no entry named: ' + missing.join(', ')
+        : 'Config loaded — categories, renames and order restored.';
+      $('cfgFile').value = '';
+    };
+    r.readAsText(f);
+  });
+
+  /* ---------------- update template (supporters) ---------------- */
+
+  var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+                'August', 'September', 'October', 'November', 'December'];
+  var TIERS = [['004080', 'Blue (004080)'], ['808080', 'Grey (808080)'],
+               ['0066FF', 'Bright blue (0066FF)']];
+
+  function loadStoredSupporters() {
+    try {
+      var raw = localStorage.getItem('tcs.supporters');
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  }
+  function storeSupporters(s) {
+    try {
+      if (s) localStorage.setItem('tcs.supporters', JSON.stringify(s));
+      else localStorage.removeItem('tcs.supporters');
+    } catch (e) {}
+  }
+
+  function supportersSummary() {
+    var s = state.supporters;
+    if (!s) return '';
+    return s.month + ' ' + s.year + ' · ' + s.names.length + ' supporters';
+  }
+
+  function refreshTplStatus() {
+    if (!state.tpl) return;
+    var extra = supportersSummary();
+    $('tplStatus').innerHTML = '';
+    var chip = document.createElement('span');
+    chip.className = 'filechip';
+    chip.innerHTML = '<span class="dot"></span>';
+    chip.appendChild(document.createTextNode(
+      state.tplName + (extra ? ' — ' + extra : '')));
+    $('tplStatus').appendChild(chip);
+  }
+
+  function renderSupRows() {
+    var box = $('supRows');
+    box.textContent = '';
+    state.draft.names.forEach(function (n, i) {
+      var row = document.createElement('div');
+      row.className = 'srow';
+      var ud = document.createElement('div'); ud.className = 'ud';
+      [['▲', -1], ['▼', 1]].forEach(function (d) {
+        var b = document.createElement('button');
+        b.textContent = d[0];
+        b.setAttribute('aria-label', d[1] < 0 ? 'Move up' : 'Move down');
+        b.onclick = function () {
+          var j = i + d[1];
+          if (j < 0 || j >= state.draft.names.length) return;
+          var t = state.draft.names[i];
+          state.draft.names[i] = state.draft.names[j];
+          state.draft.names[j] = t;
+          renderSupRows();
+        };
+        ud.appendChild(b);
+      });
+      var name = document.createElement('input');
+      name.type = 'text'; name.value = n.name; name.id = 'sup_' + i;
+      name.setAttribute('aria-label', 'Supporter name');
+      name.oninput = function () { n.name = name.value; };
+      var sel = document.createElement('select');
+      sel.setAttribute('aria-label', 'Tier colour');
+      TIERS.forEach(function (t) {
+        var op = document.createElement('option');
+        op.value = t[0]; op.textContent = t[1];
+        op.selected = (n.color || '004080').toUpperCase() === t[0].toUpperCase();
+        sel.appendChild(op);
+      });
+      if (!TIERS.some(function (t) {
+            return t[0].toUpperCase() === (n.color || '').toUpperCase(); })) {
+        var op = document.createElement('option');
+        op.value = n.color; op.textContent = n.color; op.selected = true;
+        sel.appendChild(op);
+      }
+      sel.onchange = function () { n.color = sel.value; };
+      var del = document.createElement('button');
+      del.textContent = '✕';
+      del.setAttribute('aria-label', 'Remove ' + n.name);
+      del.onclick = function () { state.draft.names.splice(i, 1); renderSupRows(); };
+      row.appendChild(ud); row.appendChild(name); row.appendChild(sel); row.appendChild(del);
+      box.appendChild(row);
+    });
+    $('supCount').textContent = state.draft.names.length + ' supporter'
+      + (state.draft.names.length === 1 ? '' : 's');
+  }
+
+  function openTplModal() {
+    if (!state.supporters) return;
+    state.draft = JSON.parse(JSON.stringify(state.supporters));
+    var sel = $('supMonth');
+    sel.textContent = '';
+    MONTHS.forEach(function (mn) {
+      var op = document.createElement('option');
+      op.value = mn; op.textContent = mn;
+      op.selected = mn === state.draft.month;
+      sel.appendChild(op);
+    });
+    $('supYear').value = state.draft.year;
+    $('supNote').value = state.draft.note;
+    $('tplToast').textContent = '';
+    renderSupRows();
+    $('tplModal').hidden = false;
+    sel.focus();
+  }
+  function closeTplModal() { $('tplModal').hidden = true; $('tplEditBtn').focus(); }
+
+  function draftFromForm() {
+    var d = state.draft;
+    d.month = $('supMonth').value;
+    d.year = $('supYear').value.trim();
+    d.note = $('supNote').value;
+    d.names = d.names.filter(function (n) { return n.name && n.name.trim(); });
+    return d;
+  }
+
+  function builtTemplate() {
+    return state.supporters ? TCSCore.applySupporters(state.tpl, state.supporters) : state.tpl;
+  }
+
+  $('tplEditBtn').addEventListener('click', openTplModal);
+  $('tplCancelBtn').addEventListener('click', closeTplModal);
+  $('tplModal').addEventListener('click', function (ev) {
+    if (ev.target === $('tplModal')) closeTplModal();
+  });
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape' && !$('tplModal').hidden) closeTplModal();
+  });
+
+  $('tplApplyBtn').addEventListener('click', function () {
+    state.supporters = draftFromForm();
+    storeSupporters(state.supporters);
+    refreshTplStatus();
+    closeTplModal();
+    var t = $('buildToast');
+    t.className = 'toast ok';
+    t.textContent = 'Template updated — ' + supportersSummary()
+      + '. Builds from now on use it.';
+  });
+
+  $('tplExportTplBtn').addEventListener('click', function () {
+    state.supporters = draftFromForm();
+    storeSupporters(state.supporters);
+    refreshTplStatus();
+    offerFile('template.ct', builtTemplate(), $('tplToast')).catch(function () {});
+  });
+
+  $('tplExportBothBtn').addEventListener('click', function () {
+    state.supporters = draftFromForm();
+    storeSupporters(state.supporters);
+    refreshTplStatus();
+    var files = [{ name: 'template.ct', text: builtTemplate() }];
+    var cfg = currentCfg();
+    if (cfg.game && cfg.version) {
+      files.push({ name: manifestName(), text: TCSCore.serializeManifest(cfg) });
+    }
+    offerFile('tcs-template-and-config.zip', makeZip(files), $('tplToast'))
+      .catch(function () {});
+  });
+
+  // ---- standalone lint
+  readFileInto($('lintFile'), $('lintDrop'), function (name, text) {
+    var el = $('lintReport');
+    showReport(el, TCSCore.lintTable(text));
+    var head = document.createElement('div'); head.className = 'li';
+    head.innerHTML = '<span class="lvl OK"></span>';
+    var lbl = document.createElement('span'); lbl.textContent = name + ':';
+    head.replaceChild(lbl, head.firstChild);
+    el.insertBefore(head, el.firstChild);
+  });
+})();
+</script>
+</body>
+</html>

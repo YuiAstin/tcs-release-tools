@@ -1,0 +1,5 @@
+# Cheat Engine tables must keep their exact CRLF line endings: the builder and
+# linter assert that no lone LF exists, and CE writes/expects CRLF. Never let
+# git's autocrlf normalisation touch them (a LF template breaks every build).
+*.ct -text
+*.CT -text

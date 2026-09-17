@@ -1,0 +1,17 @@
+game: Last Breath
+version: v1.0
+table: v1.0
+exe: LastBreath.exe
+source: ../LastBreath.CT
+init: auto
+
+[stats]
+Unlimited Currency
+Unlimited Item
+
+[battle]
+Get HP Address -> Get HP Addresses
+Unlimited Stamina
+Cap Viral at 90
+Unlimited Ammo
+Unlimited Flamethrower Fuel

@@ -1,0 +1,2333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="52">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>9418</ID>
+      <Description>"Game v | Cheat Engine Table v1.0 | 2026-08- The Cheat Script"</Description>
+      <Color>B14D00</Color>
+      <GroupHeader>1</GroupHeader>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>9416</ID>
+      <Description>"========== - THE CHEAT SCRIPT -            ==========  [Steam]"</Description>
+      <Options moAllowManualCollapseAndExpand="1"/>
+      <Color>FF8000</Color>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{$lua}
+if syntaxcheck then return end
+ShellExecute('https://www.thecheatscript.com/')
+{$asm}
+[ENABLE]
+
+[DISABLE]
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>9415</ID>
+          <Description>"=== Init Script [Delete If Not Needed] ==="</Description>
+          <Color>008080</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>9103</ID>
+              <Description>"--- Initialize Unity Engine Cheat Features --- [HK: Insert]"</Description>
+              <Options moHideChildren="1"/>
+              <Color>008080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript Async="1">{$lua}
+if syntaxcheck then
+    return
+end
+if (getCEVersion() &gt;= 7.0) then
+    if (process ~= nil) then
+        if (LaunchMonoDataCollector() == 0) then
+            ShowMessage('Failed to initialize Unity Cheat Features.\nMake sure belows are correct:\n- Game is running.\n- Game version matches table version.\n- On the right platform (usually Steam).')
+            error()
+        end
+    else
+        ShowMessage('Game is not opened/attached on Cheat Engine.')
+        error()
+    end
+else
+    ShowMessage('Update Cheat Engine to v7.0 or higher')
+    error()
+end
+{$asm}
+[ENABLE]
+[DISABLE]
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>45</Key>
+                  </Keys>
+                  <ID>0</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>17</Key>
+                    <Key>97</Key>
+                  </Keys>
+                  <ID>1</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>97</Key>
+                  </Keys>
+                  <ID>2</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>17</Key>
+                    <Key>16</Key>
+                    <Key>49</Key>
+                  </Keys>
+                  <ID>3</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>45</Key>
+                  </Keys>
+                  <ID>4</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>36</Key>
+                  </Keys>
+                  <ID>5</ID>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>33</Key>
+                  </Keys>
+                  <ID>6</ID>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9586</ID>
+              <Description>"--- Initialize .NET Engine Cheat Features --- [HK: Insert]"</Description>
+              <Options moHideChildren="1"/>
+              <Color>008080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript Async="1">{$lua}
+if syntaxcheck then
+    return
+end
+if (getCEVersion() &gt;= 7.0) then
+    if (process ~= nil) then
+        if (LaunchDotNetInterface() == nil) then
+            ShowMessage('Failed to initialize .NET Cheat Features.\nMake sure belows are correct:\n- Game is running.\n- Game version matches table version.\n- On the right platform (usually Steam).')
+            error()
+        else
+            LaunchDotNetInterface()
+            dotnet_findDotNetMethodAddress('', 'Namespace.Class', 'Method', 'game.exe')
+            reinitializeDotNetSymbolhandler()
+            --LaunchMonoDataCollector()
+        end
+    else
+        ShowMessage('Game is not opened/attached on Cheat Engine.')
+        error()
+    end
+else
+    ShowMessage('Update Cheat Engine to v7.0 or higher')
+    error()
+end
+{$asm}
+[ENABLE]
+[DISABLE]
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>45</Key>
+                  </Keys>
+                  <ID>0</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>17</Key>
+                    <Key>97</Key>
+                  </Keys>
+                  <ID>1</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>97</Key>
+                  </Keys>
+                  <ID>2</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>17</Key>
+                    <Key>16</Key>
+                    <Key>49</Key>
+                  </Keys>
+                  <ID>3</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>45</Key>
+                  </Keys>
+                  <ID>4</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>36</Key>
+                  </Keys>
+                  <ID>5</ID>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>33</Key>
+                  </Keys>
+                  <ID>6</ID>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>8848</ID>
+          <Description>"[Stats]   == Activate: Alt+Insert     | Deactivate: Alt+Del              =="</Description>
+          <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
+          <Color>FF8000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>9206</ID>
+              <Description>"Toggle Individual Script by Ctrl + Numpad (Numerical)"</Description>
+              <Color>808000</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9200</ID>
+              <Description>"TCS.S01"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <Color>808000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>45</Key>
+                  </Keys>
+                  <ID>0</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Deactivate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>46</Key>
+                  </Keys>
+                  <ID>1</ID>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>17</Key>
+                    <Key>97</Key>
+                  </Keys>
+                  <ID>2</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9211</ID>
+              <Description>"TCS.S02"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <Color>808000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>45</Key>
+                  </Keys>
+                  <ID>0</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Deactivate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>46</Key>
+                  </Keys>
+                  <ID>1</ID>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>17</Key>
+                    <Key>98</Key>
+                  </Keys>
+                  <ID>2</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9210</ID>
+              <Description>"TCS.S03"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <Color>808000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>45</Key>
+                  </Keys>
+                  <ID>0</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Deactivate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>46</Key>
+                  </Keys>
+                  <ID>1</ID>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>17</Key>
+                    <Key>99</Key>
+                  </Keys>
+                  <ID>2</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9262</ID>
+              <Description>"[Stats+]"</Description>
+              <Options moHideChildren="1"/>
+              <Color>000080</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>9209</ID>
+                  <Description>"TCS.S04"</Description>
+                  <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>45</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>46</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>100</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9264</ID>
+                  <Description>"TCS.S05"</Description>
+                  <Options moHideChildren="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>45</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>46</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>101</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9268</ID>
+                  <Description>"TCS.S06"</Description>
+                  <Options moHideChildren="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>45</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>46</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>102</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9267</ID>
+                  <Description>"TCS.S07"</Description>
+                  <Options moHideChildren="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>45</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>46</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>103</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9266</ID>
+                  <Description>"TCS.S08"</Description>
+                  <Options moHideChildren="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>45</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>46</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>104</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9265</ID>
+                  <Description>"TCS.S09"</Description>
+                  <Options moHideChildren="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>45</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>46</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>105</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9212</ID>
+                  <Description>"TCS.S0A"</Description>
+                  <Options moHideChildren="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*===============================
+Cheat Script by ColonelRVH
+
+Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+Visit my website at:
+  https://www.thecheatscript.com
+- For latest content, better index &amp; easy to find game cheat that you need.
+
+● You can alter it at your own discretion, but you must keep my credits.
+● Any distributions of my tables &amp; codes are unadvised.ß
+
+===============================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>45</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>46</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys/>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>110</ID>
+          <Description>"[Battle]   == Activate: Alt+Home    | Deactivate: Alt+End             =="</Description>
+          <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
+          <Color>FF8000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>9207</ID>
+              <Description>"Toggle Individual Script by Alt + Numpad (Numerical)"</Description>
+              <Color>808000</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9213</ID>
+              <Description>"TCS.B01"</Description>
+              <Options moHideChildren="1" moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
+              <Color>808000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>36</Key>
+                  </Keys>
+                  <ID>0</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Deactivate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>35</Key>
+                  </Keys>
+                  <ID>1</ID>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>97</Key>
+                  </Keys>
+                  <ID>2</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9216</ID>
+              <Description>"TCS.B02"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <Color>808000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>36</Key>
+                  </Keys>
+                  <ID>0</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Deactivate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>35</Key>
+                  </Keys>
+                  <ID>1</ID>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>98</Key>
+                  </Keys>
+                  <ID>2</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9215</ID>
+              <Description>"TCS.B03"</Description>
+              <Options moHideChildren="1"/>
+              <Color>808000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>36</Key>
+                  </Keys>
+                  <ID>0</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Deactivate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>35</Key>
+                  </Keys>
+                  <ID>1</ID>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>99</Key>
+                  </Keys>
+                  <ID>2</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9214</ID>
+              <Description>"TCS.B04"</Description>
+              <Options moHideChildren="1"/>
+              <Color>808000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>36</Key>
+                  </Keys>
+                  <ID>0</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Deactivate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>35</Key>
+                  </Keys>
+                  <ID>1</ID>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>100</Key>
+                  </Keys>
+                  <ID>2</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9263</ID>
+              <Description>"[Battle+]"</Description>
+              <Options moHideChildren="1"/>
+              <Color>000080</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>9269</ID>
+                  <Description>"TCS.B05"</Description>
+                  <Options moHideChildren="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>36</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>35</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>101</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9273</ID>
+                  <Description>"TCS.B06"</Description>
+                  <Options moHideChildren="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>36</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>35</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>102</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9272</ID>
+                  <Description>"TCS.B07"</Description>
+                  <Options moHideChildren="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>36</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>35</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>103</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9271</ID>
+                  <Description>"TCS.B08"</Description>
+                  <Options moHideChildren="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>36</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>35</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>104</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9270</ID>
+                  <Description>"TCS.B09"</Description>
+                  <Options moHideChildren="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>36</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>35</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>105</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9217</ID>
+                  <Description>"TCS.B0A"</Description>
+                  <Options moHideChildren="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>36</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>35</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys/>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>118</ID>
+          <Description>"[Extra]   == Activate: Alt+PageUp | Deactivate: Alt+PageDown =="</Description>
+          <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
+          <Color>FF8000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>9330</ID>
+              <Description>"Toggle Individual Script by Ctrl + Shift + Number (Main Keys)"</Description>
+              <Color>808000</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9218</ID>
+              <Description>"TCS.E01"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <Color>808000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>33</Key>
+                  </Keys>
+                  <ID>0</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Deactivate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>34</Key>
+                  </Keys>
+                  <ID>1</ID>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>17</Key>
+                    <Key>16</Key>
+                    <Key>49</Key>
+                  </Keys>
+                  <ID>2</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9320</ID>
+              <Description>"TCS.E02"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <Color>808000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>33</Key>
+                  </Keys>
+                  <ID>0</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Deactivate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>34</Key>
+                  </Keys>
+                  <ID>1</ID>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>17</Key>
+                    <Key>16</Key>
+                    <Key>50</Key>
+                  </Keys>
+                  <ID>2</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9319</ID>
+              <Description>"TCS.E03"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <Color>808000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>33</Key>
+                  </Keys>
+                  <ID>0</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Deactivate</Action>
+                  <Keys>
+                    <Key>18</Key>
+                    <Key>34</Key>
+                  </Keys>
+                  <ID>1</ID>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>17</Key>
+                    <Key>16</Key>
+                    <Key>51</Key>
+                  </Keys>
+                  <ID>2</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9329</ID>
+              <Description>"[Extra+]"</Description>
+              <Options moHideChildren="1"/>
+              <Color>000080</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>9327</ID>
+                  <Description>"TCS.E04"</Description>
+                  <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>33</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>34</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>16</Key>
+                        <Key>52</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9326</ID>
+                  <Description>"TCS.E05"</Description>
+                  <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>33</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>34</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>16</Key>
+                        <Key>53</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9325</ID>
+                  <Description>"TCS.E06"</Description>
+                  <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>33</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>34</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>16</Key>
+                        <Key>54</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9324</ID>
+                  <Description>"TCS.E07"</Description>
+                  <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>33</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>34</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>16</Key>
+                        <Key>55</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9323</ID>
+                  <Description>"TCS.E08"</Description>
+                  <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>33</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>34</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>16</Key>
+                        <Key>56</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9322</ID>
+                  <Description>"TCS.E09"</Description>
+                  <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>33</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>34</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>16</Key>
+                        <Key>57</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9328</ID>
+                  <Description>"TCS.E00"</Description>
+                  <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>33</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>34</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>16</Key>
+                        <Key>48</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>9409</ID>
+          <Description>"[Game Speed]"</Description>
+          <Color>FF8000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>9419</ID>
+              <Description>"Force V-Sync Off if speedhack isn't working"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <Color>0000FF</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9198</ID>
+              <Description>"Force Pause (Toggle: Pause Break)"</Description>
+              <Color>808080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+luacall(speedhack_setSpeed(0))
+
+[DISABLE]
+luacall(speedhack_setSpeed(1))
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>19</Key>
+                  </Keys>
+                  <ID>0</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9199</ID>
+              <Description>"Speedhack (Ctrl+/Ctrl-)"</Description>
+              <Color>808080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+luacall(speedhack_setSpeed(2))
+
+[DISABLE]
+luacall(speedhack_setSpeed(1))
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Activate</Action>
+                  <Keys>
+                    <Key>17</Key>
+                    <Key>107</Key>
+                  </Keys>
+                  <ID>0</ID>
+                  <ActivateSound>Activate</ActivateSound>
+                </Hotkey>
+                <Hotkey>
+                  <Action>Deactivate</Action>
+                  <Keys>
+                    <Key>17</Key>
+                    <Key>109</Key>
+                  </Keys>
+                  <ID>1</ID>
+                  <DeactivateSound>Deactivate</DeactivateSound>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>9105</ID>
+          <Description>"&lt;-[HERE] INSTRUCTIONS | Tick the left square □ of this line to view -"</Description>
+          <Options moHideChildren="1"/>
+          <Color>008080</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>9110</ID>
+              <Description>"- Basic -"</Description>
+              <Color>008080</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>9121</ID>
+                  <Description>"Choose Yes on the table opening so it can detect the game automatically"</Description>
+                  <Color>008080</Color>
+                  <GroupHeader>1</GroupHeader>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9111</ID>
+                  <Description>"- To Activate a Cheat"</Description>
+                  <Color>008080</Color>
+                  <GroupHeader>1</GroupHeader>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>9114</ID>
+                      <Description>"1. Tick on the square □ next to the group cheat features such as [Stats][Battle][Extra]"</Description>
+                      <Color>008080</Color>
+                      <GroupHeader>1</GroupHeader>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9113</ID>
+                      <Description>"2. Certain cheat can only be activate after you done a certain action"</Description>
+                      <Color>008080</Color>
+                      <GroupHeader>1</GroupHeader>
+                      <CheatEntries>
+                        <CheatEntry>
+                          <ID>9301</ID>
+                          <Description>"So Follow the Activate instruction written on the cheat feature"</Description>
+                          <Color>008080</Color>
+                          <GroupHeader>1</GroupHeader>
+                        </CheatEntry>
+                      </CheatEntries>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9300</ID>
+                      <Description>"3. Tick on the square □ next to the cheat features you want"</Description>
+                      <Color>008080</Color>
+                      <GroupHeader>1</GroupHeader>
+                      <CheatEntries>
+                        <CheatEntry>
+                          <ID>9302</ID>
+                          <Description>"Some Cheats will start working only after you have done the action next to Update instruction"</Description>
+                          <Color>008080</Color>
+                          <GroupHeader>1</GroupHeader>
+                        </CheatEntry>
+                      </CheatEntries>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9112</ID>
+              <Description>"- Intermediate - "</Description>
+              <Color>008080</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>9106</ID>
+                  <Description>"- For cheat tables that have God Mode &amp; Instant Kill you must change the value to "Enabled" unless there's none"</Description>
+                  <Color>008080</Color>
+                  <GroupHeader>1</GroupHeader>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>9303</ID>
+                      <Description>"Or just press Scroll Lock after you have activate the Get HP Addresses"</Description>
+                      <Color>008080</Color>
+                      <GroupHeader>1</GroupHeader>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9116</ID>
+                  <Description>"- You can find old cheats in [Misc.] for older version, in rare cases"</Description>
+                  <Color>008080</Color>
+                  <GroupHeader>1</GroupHeader>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9117</ID>
+              <Description>"- Advanced | Master - "</Description>
+              <Options moHideChildren="1"/>
+              <Color>008080</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>9118</ID>
+                  <Description>"- All my codes are easy to understand and straightforward"</Description>
+                  <Color>008080</Color>
+                  <GroupHeader>1</GroupHeader>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9119</ID>
+                  <Description>"- You can alter it at your own discretion, but you must keep my credits"</Description>
+                  <Color>008080</Color>
+                  <GroupHeader>1</GroupHeader>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9120</ID>
+                  <Description>"- Any distributions of my tables &amp; codes are unadvised"</Description>
+                  <Color>008080</Color>
+                  <GroupHeader>1</GroupHeader>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9115</ID>
+              <Description>"References"</Description>
+              <Color>808000</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>9082</ID>
+                  <Description>"- [Activate: To Activate this cheat you must do this action first] -"</Description>
+                  <Color>808000</Color>
+                  <GroupHeader>1</GroupHeader>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9083</ID>
+                  <Description>"- [Update: To Update/Get the cheat's effects you must do this action first] -"</Description>
+                  <Color>808000</Color>
+                  <GroupHeader>1</GroupHeader>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>8265</ID>
+      <Description>"========== - SPECIAL THANKS -               =========="</Description>
+      <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1" moAllowManualCollapseAndExpand="1"/>
+      <Color>808000</Color>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>9236</ID>
+          <Description>"-------               July 2026 Supporters                -------"</Description>
+          <Options moHideChildren="1"/>
+          <Color>0066FF</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>9248</ID>
+              <Description>"List will be updated every 7th day of the month, or all supporters are charged"</Description>
+              <Color>0066FF</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9663</ID>
+              <Description>"ChefPickle"</Description>
+              <Color>808080</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9689</ID>
+              <Description>"Sleepy.exe"</Description>
+              <Color>004080</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9654</ID>
+              <Description>"Redmatter"</Description>
+              <Color>004080</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9634</ID>
+              <Description>"GlennRhe"</Description>
+              <Color>004080</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9653</ID>
+              <Description>"RDH"</Description>
+              <Color>004080</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9664</ID>
+              <Description>"Err0r"</Description>
+              <Color>004080</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9690</ID>
+              <Description>"王德发"</Description>
+              <Color>004080</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>8908</ID>
+      <Description>"========== - Please support my work at - =========="</Description>
+      <Options moActivateChildrenAsWell="1"/>
+      <Color>808000</Color>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>9693</ID>
+          <Description>"https://patreon.com/TheCheatScript"</Description>
+          <Options moHideChildren="1"/>
+          <Color>808000</Color>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{$lua}
+if syntaxcheck then return end
+ShellExecute('https://patreon.com/TheCheatScript')
+{$asm}
+[ENABLE]
+[DISABLE]
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>9321</ID>
+          <Description>"https://ko-fi.com/colonelrvh"</Description>
+          <Options moHideChildren="1"/>
+          <Color>808000</Color>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{$lua}
+if syntaxcheck then return end
+ShellExecute('https://ko-fi.com/colonelrvh')
+{$asm}
+[ENABLE]
+[DISABLE]
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>9694</ID>
+      <Description>"========== - More Cheat Engine Tables at - =========="</Description>
+      <Options moActivateChildrenAsWell="1"/>
+      <Color>808000</Color>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>9695</ID>
+          <Description>"https://www.thecheatscript.com"</Description>
+          <Options moHideChildren="1"/>
+          <Color>808000</Color>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{$lua}
+if syntaxcheck then return end
+ShellExecute('https://www.thecheatscript.com')
+{$asm}
+[ENABLE]
+[DISABLE]
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+  <Comments>If you want to support, Please consider becoming my patron at:
+----------------------
+https://patreon.com/TheCheatScript
+https://ko-fi.com/ColonelRVH
+----------------------
+It would be a great help for me to cover my living expenses so I can focus on making  &amp; improving cheats for you. 
+----------------------
+© ColonelRVH, 2017
+</Comments>
+  <LuaScript>attachlist=getAutoAttachList()
+stringlist_add(attachlist,"game.exe");
+
+function cycleFullCompact(sender,force) local state = not(compactmenuitem.Caption == 'Compact View Mode'); if force~=nil then state = not force end; compactmenuitem.Caption = state and 'Compact View Mode' or 'Full View Mode'; getMainForm().Splitter1.Visible = state; getMainForm().Panel5.Visible    = state; end; function addCompactMenu() if compactmenualreadyexists then return end; local parent = getMainForm().Menu.Items; compactmenuitem = createMenuItem(parent); parent.add(compactmenuitem); compactmenuitem.Caption = 'Compact View Mode'; compactmenuitem.OnClick = cycleFullCompact; compactmenualreadyexists = 'yes'; end; addCompactMenu(); cycleFullCompact(nil,true)
+</LuaScript>
+</CheatTable>
