@@ -61,7 +61,25 @@
     return lines.slice(se[0], se[1] + 1).join('');
   }
 
+  // An entry's OWN script sits before its nested <CheatEntries>; a group
+  // header with script children has none of its own (and grabbing the first
+  // <AssemblerScript> there would silently steal a child's script).
+  function hasOwnScript(entryText) {
+    var a = entryText.indexOf('<AssemblerScript');
+    if (a < 0) return false;
+    var c = entryText.indexOf('<CheatEntries>');
+    return c < 0 || a < c;
+  }
+
   function getScriptBody(entryText) {
+    if (!hasOwnScript(entryText)) {
+      var m = /<Description>"([^"]*)"<\/Description>/.exec(entryText);
+      var e = new Error('"' + (m ? m[1] : '?') + '" has no Auto Assembler script of'
+        + ' its own, so it cannot fill a slot. Set it to Skip (group headers,'
+        + ' pointers and value entries are not features).');
+      e.notAScript = true;
+      throw e;
+    }
     var a = idx(entryText, '<AssemblerScript');
     a = idx(entryText, '>', a) + 1;
     var b = idx(entryText, '</AssemblerScript>', a);
@@ -379,8 +397,9 @@
            desc.indexOf('TCS Dev Starter') >= 0;
   }
 
-  // list a raw table's top-level cheat entry descriptions (for the UI),
-  // skipping the dev-starter scaffolding
+  // Describe a raw table's top-level entries (for the UI), skipping the
+  // dev-starter scaffolding. Returns [{name, hasScript}] — a work table is
+  // mostly value/pointer entries, and only script entries can fill a slot.
   function listTopEntries(src) {
     var lines = splitKeep(src);
     var out = [], depth = 0, start = -1;
@@ -395,7 +414,9 @@
         if (depth <= 0 && start >= 0) {
           var block = lines.slice(start, i + 1).join('');
           var m = /<Description>"([^"]*)"<\/Description>/.exec(block);
-          if (m && !isStarterScaffold(block, m[1])) out.push(m[1]);
+          if (m && !isStarterScaffold(block, m[1])) {
+            out.push({ name: m[1], hasScript: hasOwnScript(block) });
+          }
           start = -1;
           depth = 0;
         }
@@ -461,6 +482,11 @@
       feats.forEach(function (feat, fi) {
         var slot = order[fi], srcName = feat[0], relName = feat[1];
         var entry = extractEntry(src, srcName);
+        if (!hasOwnScript(entry)) {
+          throw new Error('"' + srcName + '" has no Auto Assembler script of its own,'
+            + ' so it cannot fill a slot — set it to Skip. (Group headers, pointers'
+            + ' and value entries are not features.)');
+        }
         var body = stripDevNotes(getScriptBody(entry));
         if (body.indexOf('Cheat Script by ColonelRVH') < 0) {
           var en = body.indexOf('[ENABLE]');

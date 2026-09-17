@@ -108,6 +108,17 @@ def extract_entry(text, desc):
     return ''.join(lines[s:e + 1])
 
 
+def has_own_script(entry_text):
+    """An entry's OWN script sits before its nested <CheatEntries>; a group
+    header with script children has none of its own (and taking the first
+    <AssemblerScript> there would silently steal a child's script)."""
+    a = entry_text.find('<AssemblerScript')
+    if a < 0:
+        return False
+    c = entry_text.find('<CheatEntries>')
+    return c < 0 or a < c
+
+
 def get_script_body(entry_text):
     a = entry_text.index('<AssemblerScript')
     a = entry_text.index('>', a) + 1
@@ -324,6 +335,10 @@ def build(manifest_path, out_path=None):
         order = top + plus
         for slot, (src_name, rel_name) in zip(order, feats):
             entry = extract_entry(src, src_name)
+            if not has_own_script(entry):
+                sys.exit('"%s" has no Auto Assembler script of its own, so it cannot'
+                         ' fill a slot - remove it from the manifest. (Group headers,'
+                         ' pointers and value entries are not features.)' % src_name)
             body = strip_dev_notes(get_script_body(entry))
             if 'Cheat Script by ColonelRVH' not in body:
                 body = header + body[body.index('[ENABLE]'):] if '[ENABLE]' in body else header + body

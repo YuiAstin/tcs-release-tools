@@ -261,8 +261,10 @@ footer { color: var(--muted); font-size: 12px; margin-top: 26px; }
     return 'skip';
   }
 
-  function setEntries(names) {
-    state.entries = names.map(function (n) {
+  // `items` are {name, hasScript} from TCSCore, or plain strings for the example
+  function setEntries(items) {
+    state.entries = items.map(function (it) {
+      var n = typeof it === 'string' ? it : it.name;
       return { src: n, cat: guessCat(n), rel: n };
     });
     renderRows();
@@ -444,13 +446,32 @@ footer { color: var(--muted); font-size: 12px; margin-top: 26px; }
     try { entries = TCSCore.listTopEntries(text); }
     catch (e) { $('srcStatus').textContent = 'Could not read that file as a cheat table.'; return; }
     if (!entries.length) { $('srcStatus').textContent = 'No cheat entries found in that file.'; return; }
+
+    // only Auto Assembler scripts can fill a slot; a work table is mostly
+    // value/pointer entries from scanning, which are not features
+    var scripts = entries.filter(function (e) { return e.hasScript; });
+    var skipped = entries.length - scripts.length;
+    if (!scripts.length) {
+      $('srcStatus').innerHTML = '';
+      var bad = document.createElement('span'); bad.className = 'filechip';
+      bad.innerHTML = '<span class="dot bad"></span>';
+      bad.appendChild(document.createTextNode(name + ' — no Auto Assembler scripts found'
+        + ' (that table has only value/pointer entries)'));
+      $('srcStatus').appendChild(bad);
+      return;
+    }
+
     state.src = text; state.srcName = name; state.example = false;
     $('exampleBadge').hidden = true;
     $('srcStatus').innerHTML = '';
     var chip = document.createElement('span'); chip.className = 'filechip';
     chip.innerHTML = '<span class="dot"></span>';
-    chip.appendChild(document.createTextNode(name + ' — ' + entries.length + ' top-level entries'));
+    chip.appendChild(document.createTextNode(name + ' — ' + scripts.length + ' script'
+      + (scripts.length === 1 ? '' : 's')
+      + (skipped ? ' (' + skipped + ' value/pointer ' + (skipped === 1 ? 'entry' : 'entries')
+                   + ' not listed)' : '')));
     $('srcStatus').appendChild(chip);
+    entries = scripts;
     var base = name.replace(/\.(ct|xml)$/i, '');
     if (!$('fGame').value || state.exampleMeta !== false) {
       $('fGame').value = base.replace(/([a-z])([A-Z])/g, '$1 $2');
