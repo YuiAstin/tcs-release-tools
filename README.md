@@ -33,8 +33,10 @@ Built 2026-09-02.
 | `template.ct` | canonical template copy (update here when the template revs) |
 | `build_release.py` | manifest → release table generator |
 | `check_release.py` | release linter (errors = exit code) |
+| `tcs_core.js` | the builder + linter as one JS file, loaded by the web page (kept in lock-step with the Python: see `test_parity.py`) |
 | `tcs_template.lua` | CE auto-assembler template **+ "TCS" main-menu** (Build Release / Lint / Open Tools Folder); installed in `C:\Program Files\Cheat Engine\autorun\` — edit here, re-copy there |
 | `test_tcs_lua.py` | unit tests for the Lua core (`pip install lupa`; run `python test_tcs_lua.py`) |
+| `test_parity.py` | builds a fixture table through `build_release.py` AND `tcs_core.js` (needs `node`) and asserts identical bytes, matching lint reports, deterministic IDs; run `python test_parity.py` after touching either builder |
 | `lastbreath.manifest` | working example |
 
 ## Symbol-driven sub-entries (2026-09-17)

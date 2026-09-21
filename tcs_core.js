@@ -95,6 +95,33 @@
       '');
   }
 
+  function reEscape(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+  function findAll(re, text) {
+    var out = [], m, r = new RegExp(re.source, re.flags.indexOf('g') >= 0 ? re.flags : re.flags + 'g');
+    while ((m = r.exec(text)) !== null) { out.push(m); if (m.index === r.lastIndex) r.lastIndex++; }
+    return out;
+  }
+
+  // CheatEntry IDs only: <Hotkey> blocks carry their own <ID> tags (small
+  // per-record indexes) which must neither count as taken nor be remapped.
+  function entryIds(text) {
+    var ids = {};
+    findAll(/<ID>(\d+)<\/ID>/g, text.replace(/<Hotkeys>[\s\S]*?<\/Hotkeys>/g, ''))
+      .forEach(function (m) { ids[m[1]] = true; });
+    return ids;
+  }
+
+  // rewrite entry <ID> tags per mapping ([[old, new], ...]), leaving <Hotkeys> alone
+  function remapEntryIds(text, mapping) {
+    return text.split(/(<Hotkeys>[\s\S]*?<\/Hotkeys>)/).map(function (part, i) {
+      if (i % 2) return part;
+      mapping.forEach(function (mp) {
+        part = part.split('<ID>' + mp[0] + '</ID>').join('<ID>' + mp[1] + '</ID>');
+      });
+      return part;
+    }).join('');
+  }
+
   function getChildrenBlock(entryText) {
     var i = entryText.indexOf('<CheatEntries>');
     if (i < 0) return null;
@@ -122,13 +149,6 @@
       }
     });
     return out.join('');
-  }
-
-  function reEscape(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
-  function findAll(re, text) {
-    var out = [], m, r = new RegExp(re.source, re.flags.indexOf('g') >= 0 ? re.flags : re.flags + 'g');
-    while ((m = r.exec(text)) !== null) { out.push(m); if (m.index === r.lastIndex) r.lastIndex++; }
-    return out;
   }
 
   /* ------------------------------------------------------------------ */
@@ -469,8 +489,7 @@
       catch (e) { if (!e.notFound) throw e; }
     });
 
-    var tplIds = {};
-    findAll(/<ID>(\d+)<\/ID>/g, tpl).forEach(function (m) { tplIds[m[1]] = true; });
+    var tplIds = entryIds(tpl);
 
     ['stats', 'battle', 'extra'].forEach(function (cat) {
       var top = SLOTS[cat][0], plus = SLOTS[cat][1], plusDesc = SLOTS[cat][2];
@@ -494,52 +513,59 @@
         }
         var children = getChildrenBlock(entry);
 
-        var key = '<Description>"' + slot + '"</Description>';
-        var i = idx(tpl, key);
-        tpl = tpl.slice(0, i) + '<Description>"' + relName + '"</Description>' +
-              tpl.slice(i + key.length);
-        var a = idx(tpl, '<AssemblerScript>', i) + '<AssemblerScript>'.length;
-        var b = idx(tpl, '</AssemblerScript>', a);
-        tpl = tpl.slice(0, a) + body + tpl.slice(b);
-
-        var lines = splitKeep(tpl);
-        var se = entryBounds(lines, '<Description>"' + relName + '"</Description>');
-        var slotLine = lines[se[0]];
-        var slotIndent = slotLine.length - slotLine.replace(/^ +/, '').length;
         function takeId() {
           var nw = 10000;
           while (tplIds[String(nw)]) nw++;
           tplIds[String(nw)] = true;
           return nw;
         }
+
+        // the slot entry, located once by its template name; everything
+        // below edits that entry's own text so a release name that is
+        // duplicated or equal to a template description cannot mislead
+        var lines = splitKeep(tpl);
+        var se = entryBounds(lines, '<Description>"' + slot + '"</Description>');
+        var slotLine = lines[se[0]];
+        var slotIndent = slotLine.length - slotLine.replace(/^ +/, '').length;
+        var ent = lines.slice(se[0], se[1] + 1).join('');
+
+        var key = '<Description>"' + slot + '"</Description>';
+        var i = idx(ent, key);
+        ent = ent.slice(0, i) + '<Description>"' + relName + '"</Description>' + ent.slice(i + key.length);
+        var a = idx(ent, '<AssemblerScript>', i) + '<AssemblerScript>'.length;
+        var b = idx(ent, '</AssemblerScript>', a);
+        ent = ent.slice(0, a) + body + ent.slice(b);
+
         var block;
         if (children) {
-          Object.keys((function () {
-            var ids = {};
-            findAll(/<ID>(\d+)<\/ID>/g, children).forEach(function (m) { ids[m[1]] = true; });
-            return ids;
-          })()).forEach(function (cid) {
-            if (tplIds[cid]) {
-              var nw = takeId();
-              children = children.split('<ID>' + cid + '</ID>').join('<ID>' + nw + '</ID>');
-            }
-          });
+          // remap child IDs that collide with the template, in ascending
+          // order (same bytes as build_release.py)
+          var mapping = [];
+          Object.keys(entryIds(children)).map(Number).sort(function (x, y) { return x - y; })
+            .forEach(function (cid) {
+              if (tplIds[String(cid)]) mapping.push([String(cid), takeId()]);
+            });
+          children = remapEntryIds(children, mapping);
           block = reindentChildren(children, slotIndent + 2);
         } else {
           // no hand-made children: derive them from registered symbols
           block = synthChildren(body, slotIndent + 2, takeId);
         }
         if (block) {
-          tpl = lines.slice(0, se[1]).concat([block]).concat(lines.slice(se[1])).join('');
-
-          var optI = idx(tpl, '<Options', idx(tpl, '<Description>"' + relName + '"</Description>'));
-          var optJ = idx(tpl, '/>', optI) + 2;
-          var opts = tpl.slice(optI, optJ);
+          var close = ent.lastIndexOf('</CheatEntry>');
+          close = ent.lastIndexOf('\n', close) + 1;
+          ent = ent.slice(0, close) + block + ent.slice(close);
+          // a feature with sub scripts should toggle them along
+          var optI = idx(ent, '<Options');
+          var optJ = idx(ent, '/>', optI) + 2;
+          var opts = ent.slice(optI, optJ);
           ['moActivateChildrenAsWell="1"', 'moDeactivateChildrenAsWell="1"'].forEach(function (need) {
             if (opts.indexOf(need) < 0) opts = opts.replace('/>', ' ' + need + '/>');
           });
-          tpl = tpl.slice(0, optI) + opts + tpl.slice(optJ);
+          ent = ent.slice(0, optI) + opts + ent.slice(optJ);
         }
+
+        tpl = lines.slice(0, se[0]).join('') + ent + lines.slice(se[1] + 1).join('');
       });
 
       order.slice(feats.length).forEach(function (slot) {
