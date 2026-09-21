@@ -20,6 +20,7 @@ import subprocess
 import sys
 import tempfile
 
+import contextlib
 import build_release
 import check_release
 
@@ -109,6 +110,8 @@ def fixture_table():
 
     # C: plain; mono use makes init:auto pick the Unity init script
     body_c = NL.join([
+        '{ Game: Test.exe', '  Author : dev', '}', '',
+        '{$lua}', 'if syntaxcheck then return end', 'print("pre-enable block")', '{$asm}',
         '[ENABLE]', 'LaunchMonoDataCollector()',
         'aobscanregion(Sta_AOB,Player:Update,Player:Update+200,F3 0F 11 49 2C)',
         'registersymbol(Sta_AOB)', '[DISABLE]', 'unregistersymbol(Sta_AOB)', ''])
@@ -121,7 +124,13 @@ def fixture_table():
         'newmem:', 'code:', '  mov [eax+000000E8],ecx', '  jmp return',
         'Item_AOB:', '  jmp newmem', '  nop', 'return:',
         '[DISABLE]', 'Item_AOB:', '  db 89 88 E8 00 00 00', 'unregistersymbol(*)', 'dealloc(*)', ''])
-    D = _entry(7, 'Item #2 Stock', body_d)
+    D = _entry(7, 'Item #2 Stock', body_d, indent=8)
+    # folder with the nested feature, a second "Unlimited Stamina" (different
+    # code) and a copy of C's script under another name
+    OLD = _entry(8, 'Misc', children=(
+        D +
+        _entry(9, 'Unlimited Stamina', body_d.replace('Item_AOB', 'Old_AOB'), indent=8) +
+        _entry(10, 'Stamina Copy', body_c, indent=8)))
 
     # a group header with a script child, and a value entry: never features
     G = _entry(4, 'Helpers',
@@ -132,7 +141,7 @@ def fixture_table():
 
     return NL.join(['<?xml version="1.0" encoding="utf-8"?>',
                     '<CheatTable CheatEngineTableVersion="45">', '  <CheatEntries>']
-                   + A + B + C + D + G + V +
+                   + A + B + C + OLD + G + V +
                    ['  </CheatEntries>', '  <UserdefinedSymbols/>',
                     '  <Structures>', '  </Structures>', '</CheatTable>']) + NL
 
@@ -143,7 +152,11 @@ MANIFESTS = {
         'source: Raw.CT', 'init: auto', '',
         '[stats]', 'Unlimited Currency', '',
         '[battle]', 'Unlimited Ammo -> Unlimited Ammo (Scroll Lock)', 'Unlimited Stamina', '',
-        '[extra]', 'Item #2 Stock -> Item #2 Stock  # the name keeps its #', '']),
+        '[extra]', 'Item #2 Stock -> Item #2 & Stock  # the name keeps its #', '']),
+    # no mono symbols anywhere selected -> no init script at all
+    'nomono': NL.join([
+        'game: Test Game', 'version: v1.2', 'exe: TestGame.exe', 'source: Raw.CT', '',
+        '[stats]', 'Item #2 Stock', '']),
     # two features renamed to the same thing, and one renamed to a name the
     # template already uses: sub-entries must still land under their own slot
     'dup-names': NL.join([
@@ -167,6 +180,7 @@ fs.writeFileSync(outPath, page.output);
 process.stdout.write(JSON.stringify({
   samePlain: plain.output === page.output,
   filename: page.filename,
+  warnings: page.warnings,
   lint: T.lintTable(page.output),
 }));
 '''
@@ -199,7 +213,7 @@ def main():
         tpl = os.path.join(HERE, 'template.ct')
         runner = os.path.join(tmp, 'run.js')
         io.open(runner, 'w', encoding='utf-8').write(JS_RUNNER)
-        outputs = {}
+        outputs, warnings_out = {}, {}
 
         for name, text in MANIFESTS.items():
             man = os.path.join(tmp, name + '.manifest')
@@ -207,8 +221,14 @@ def main():
             py_out = os.path.join(tmp, name + '.py.ct')
             js_out = os.path.join(tmp, name + '.js.ct')
 
-            build_release.build(man, py_out, date=DATE)
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                build_release.build(man, py_out, date=DATE)
+            py_warn = [l[5:] for l in buf.getvalue().splitlines() if l.startswith('WARN ')]
             js = run_js(node, runner, core, tpl, src, man, js_out)
+            check('%s: build warnings agree' % name, py_warn == js['warnings'],
+                  '\n py: %r\n js: %r' % (py_warn, js['warnings']))
+            warnings_out[name] = py_warn
             py = open(py_out, 'rb').read()
             jsb = open(js_out, 'rb').read()
             outputs[name] = py.decode('utf-8')
@@ -237,11 +257,22 @@ def main():
               and '[Sub Scripts]' in basic)
         check('unity init kept, .NET init dropped',
               'Initialize Unity' in basic and '.NET Engine' not in basic)
-        check('"#" inside a feature name survives the manifest',
-              '"Item #2 Stock"' in basic)
+        check('"#" inside a feature name survives the manifest; "&" is escaped once',
+              '"Item #2 &amp; Stock"' in basic, repr(re.findall(r'"Item[^"]*"', basic)))
+        check('feature nested in a folder is found', 'Item_AOB' in basic)
         pl = py_lint(os.path.join(tmp, 'basic.py.ct'))
         check('linter sees a big offset on a 32-bit register',
-              any('Item #2 Stock' in m and '0xE8' in m for _, m in pl), repr(pl))
+              any('Item #2' in m and '0xE8' in m for _, m in pl), repr(pl))
+        check('{$lua} block before [ENABLE] survives header insertion',
+              'print("pre-enable block")' in basic and 'Author : dev' not in basic)
+        stam = re.search(r'"Unlimited Stamina"</Description>[\s\S]*?</AssemblerScript>', basic).group(0)
+        check('duplicate source name: first occurrence used', 'Sta_AOB' in stam and 'Old_AOB' not in stam)
+        check('duplicate name and same-code warnings raised',
+              any('appears 2 times' in w for w in warnings_out['basic']) and
+              any('same script as Misc / Stamina Copy' in w for w in warnings_out['basic']),
+              repr(warnings_out['basic']))
+        nomono = outputs['nomono']
+        check('no mono symbols -> no init script', 'Init Script' not in nomono and '.NET Engine' not in nomono)
 
         # --- init typo is an error on both sides ---------------------------
         bad = os.path.join(tmp, 'bad.manifest')

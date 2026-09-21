@@ -57,6 +57,7 @@ input[type=text]:focus-visible, select:focus-visible, button:focus-visible,
   align-items: center; padding: 6px 8px; border: 1px solid var(--border); border-radius: 8px;
   background: var(--surface2); }
 .row.skipped { opacity: 0.55; }
+.row .name .folder { color: var(--muted); font-size: 12px; }
 .row .name { font-family: var(--mono); font-size: 12.5px; overflow-wrap: anywhere; }
 .ud { display: flex; flex-direction: column; gap: 2px; }
 .ud button { padding: 0 6px; line-height: 1.1; font-size: 10px; }
@@ -232,7 +233,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 26px; }
 
   var state = {
     tpl: null, tplBundled: null, tplIsCustom: false, tplName: 'template.ct',
-    src: null, srcName: null, example: true,
+    src: null, srcName: null, example: true, cfg: null,
     entries: [], built: null, supporters: null, draft: null,
   };
 
@@ -245,11 +246,16 @@ footer { color: var(--muted); font-size: 12px; margin-top: 26px; }
     return 'skip';
   }
 
-  // `items` are {name, hasScript} from TCSCore, or plain strings for the example
+  // `items` are {name, path} from TCSCore.listScripts, or plain strings for
+  // the example. src is the description as stored in the table (XML-escaped);
+  // shown and edited as plain text.
   function setEntries(items) {
     state.entries = items.map(function (it) {
       var n = typeof it === 'string' ? it : it.name;
-      return { src: n, cat: guessCat(n), rel: n };
+      var shown = TCSCore.xmlUnescape(n);
+      var path = typeof it === 'string' ? '' : it.path;
+      var folder = path && path.length > n.length ? path.slice(0, path.length - n.length) : '';
+      return { src: n, folder: TCSCore.xmlUnescape(folder), cat: guessCat(shown), rel: shown };
     });
     renderRows();
   }
@@ -273,7 +279,12 @@ footer { color: var(--muted); font-size: 12px; margin-top: 26px; }
         };
         ud.appendChild(b);
       });
-      var name = document.createElement('div'); name.className = 'name'; name.textContent = e.src;
+      var name = document.createElement('div'); name.className = 'name';
+      if (e.folder) {
+        var fo = document.createElement('span'); fo.className = 'folder'; fo.textContent = e.folder;
+        name.appendChild(fo);
+      }
+      name.appendChild(document.createTextNode(TCSCore.xmlUnescape(e.src)));
       var sel = document.createElement('select');
       sel.id = 'cat_' + i;
       [['stats', '[Stats]'], ['battle', '[Battle]'], ['extra', '[Extra]'], ['skip', 'Skip']]
@@ -426,15 +437,12 @@ footer { color: var(--muted); font-size: 12px; margin-top: 26px; }
 
   // ---- raw table
   readFileInto($('srcFile'), $('srcDrop'), function (name, text) {
-    var entries;
-    try { entries = TCSCore.listTopEntries(text); }
+    var scripts;
+    try { scripts = TCSCore.listScripts(text); }
     catch (e) { $('srcStatus').textContent = 'Could not read that file as a cheat table.'; return; }
-    if (!entries.length) { $('srcStatus').textContent = 'No cheat entries found in that file.'; return; }
-
-    // only Auto Assembler scripts can fill a slot; a work table is mostly
-    // value/pointer entries from scanning, which are not features
-    var scripts = entries.filter(function (e) { return e.hasScript; });
-    var skipped = entries.length - scripts.length;
+    // only Auto Assembler scripts can fill a slot (at any depth; a work table
+    // is mostly value/pointer entries from scanning, which are not features)
+    var nested = scripts.filter(function (e) { return e.path !== e.name; }).length;
     if (!scripts.length) {
       $('srcStatus').innerHTML = '';
       var bad = document.createElement('span'); bad.className = 'filechip';
@@ -452,18 +460,17 @@ footer { color: var(--muted); font-size: 12px; margin-top: 26px; }
     chip.innerHTML = '<span class="dot"></span>';
     chip.appendChild(document.createTextNode(name + ' — ' + scripts.length + ' script'
       + (scripts.length === 1 ? '' : 's')
-      + (skipped ? ' (' + skipped + ' value/pointer ' + (skipped === 1 ? 'entry' : 'entries')
-                   + ' not listed)' : '')));
+      + (nested ? ' (' + nested + ' inside folders)' : '')));
     $('srcStatus').appendChild(chip);
-    entries = scripts;
     var base = name.replace(/\.(ct|xml)$/i, '');
     if (!$('fGame').value || state.exampleMeta !== false) {
       $('fGame').value = base.replace(/([a-z])([A-Z])/g, '$1 $2');
       $('fExe').value = base + '.exe';
       state.exampleMeta = false;
     }
-    setEntries(entries);
+    setEntries(scripts);
     $('buildToast').textContent = '';
+    if (state.cfg) applyCfg(state.cfg);   // a config loaded before the table
   });
 
   // example initial state
@@ -497,7 +504,8 @@ footer { color: var(--muted); font-size: 12px; margin-top: 26px; }
     $('outName').textContent = res.filename;
     toast.className = 'toast ok';
     toast.textContent = 'Built — review the lint report, then save.';
-    showReport($('buildReport'), TCSCore.lintTable(res.output));
+    showReport($('buildReport'), res.warnings.map(function (w) { return ['WARN ', w]; })
+                                   .concat(TCSCore.lintTable(res.output)));
     $('copyArea').hidden = true;
   });
 
@@ -681,37 +689,50 @@ footer { color: var(--muted); font-size: 12px; margin-top: 26px; }
       if (cfg.exe) $('fExe').value = cfg.exe;
       if (cfg.init) $('fInit').value = cfg.init;
       state.exampleMeta = false;
-
-      // re-apply categories/renames/order to the loaded table's entries
-      var known = {};
-      state.entries.forEach(function (e) { known[e.src] = e; });
-      var ordered = [], seen = {};
-      ['stats', 'battle', 'extra'].forEach(function (cat) {
-        (cfg[cat] || []).forEach(function (pair) {
-          var e = known[pair[0]];
-          if (!e) return;
-          e.cat = cat; e.rel = pair[1]; ordered.push(e); seen[pair[0]] = true;
-        });
-      });
-      var missing = [];
-      ['stats', 'battle', 'extra'].forEach(function (cat) {
-        (cfg[cat] || []).forEach(function (pair) {
-          if (!known[pair[0]]) missing.push(pair[0]);
-        });
-      });
-      state.entries.forEach(function (e) {
-        if (!seen[e.src]) { e.cat = 'skip'; ordered.push(e); }
-      });
-      state.entries = ordered;
-      renderRows();
-      toast.className = missing.length ? 'toast err' : 'toast ok';
-      toast.textContent = missing.length
-        ? 'Config loaded, but this table has no entry named: ' + missing.join(', ')
-        : 'Config loaded — categories, renames and order restored.';
+      state.cfg = cfg;
+      if (state.example || !state.src) {
+        toast.className = 'toast ok';
+        toast.textContent = 'Config loaded — drop the raw table and its categories, renames and order will be applied.';
+      } else {
+        applyCfg(cfg);
+      }
       $('cfgFile').value = '';
     };
     r.readAsText(f);
   });
+
+  // re-apply a config's categories/renames/order to the loaded table's entries
+  function applyCfg(cfg) {
+    var toast = $('buildToast');
+    var known = {};
+    state.entries.forEach(function (e) {
+      known[e.src] = e;
+      known[TCSCore.xmlUnescape(e.src)] = e;   // config may spell the name as shown
+    });
+    var ordered = [], seen = {};
+    ['stats', 'battle', 'extra'].forEach(function (cat) {
+      (cfg[cat] || []).forEach(function (pair) {
+        var e = known[pair[0]];
+        if (!e || seen[e.src]) return;
+        e.cat = cat; e.rel = TCSCore.xmlUnescape(pair[1]); ordered.push(e); seen[e.src] = true;
+      });
+    });
+    var missing = [];
+    ['stats', 'battle', 'extra'].forEach(function (cat) {
+      (cfg[cat] || []).forEach(function (pair) {
+        if (!known[pair[0]]) missing.push(pair[0]);
+      });
+    });
+    state.entries.forEach(function (e) {
+      if (!seen[e.src]) { e.cat = 'skip'; ordered.push(e); }
+    });
+    state.entries = ordered;
+    renderRows();
+    toast.className = missing.length ? 'toast err' : 'toast ok';
+    toast.textContent = missing.length
+      ? 'Config loaded, but this table has no entry named: ' + missing.join(', ')
+      : 'Config loaded — categories, renames and order restored.';
+  }
 
   /* ---------------- update template (supporters) ---------------- */
 
