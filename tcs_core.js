@@ -191,13 +191,10 @@
   }
 
   // "-------               July 2026 Supporters                -------"
-  // centred in the template's 51-char inner field
+  // The template's spacing is fixed (15 spaces before the label, 16 after)
+  // whatever the month's length: "August 2026" keeps the same 15/16.
   function supportersHeader(month, year) {
-    var label = month + ' ' + year + ' Supporters';
-    var pad = 51 - label.length;
-    if (pad < 2) pad = 2;
-    var left = Math.floor(pad / 2);
-    return '-------' + ' '.repeat(left) + label + ' '.repeat(pad - left) + '-------';
+    return '-------' + ' '.repeat(15) + month + ' ' + year + ' Supporters' + ' '.repeat(16) + '-------';
   }
 
   function findSupportersDesc(tpl) {
