@@ -14,6 +14,10 @@ import xml.etree.ElementTree as ET
 
 issues = []
 
+# [reg+off] / [reg+reg*n+off]; 64-bit (rax, r8d...) and 32-bit (eax, esi...)
+REG = r'(?:r[a-z0-9]+|e[a-z]{2}|[abcd]x|[sd]i|[sb]p)'
+OFFSET_RE = re.compile(r'\[' + REG + r'(?:\+' + REG + r'(?:\*\d)?)?\+([0-9A-Fa-f]{2,})\]')
+
 
 def err(msg):
     issues.append(('ERROR', msg))
@@ -98,7 +102,7 @@ def check(path):
 
         # rule 4: big hardcoded offsets in active code want the readmem treatment
         has_readmem = 'readmem(' in code
-        for off in set(re.findall(r'\[(?:r[a-z0-9]+)(?:\+r[a-z0-9]+\*\d)?\+([0-9A-Fa-f]{2,})\]', code)):
+        for off in sorted(set(OFFSET_RE.findall(code))):
             v = int(off, 16)
             if v > 0x60 and not has_readmem:
                 warn('%s: hardcoded offset 0x%X in active code with no readmem - '

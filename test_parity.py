@@ -114,6 +114,15 @@ def fixture_table():
         'registersymbol(Sta_AOB)', '[DISABLE]', 'unregistersymbol(Sta_AOB)', ''])
     C = _entry(3, 'Unlimited Stamina', body_c)
 
+    # D: 32-bit game code, no readmem: the linter must still see the big offset
+    body_d = NL.join([
+        '[ENABLE]', 'aobscanmodule(Item_AOB,game.exe,89 88 E8 00 00 00 5E)',
+        'alloc(newmem,$1000)', 'label(code)', 'label(return)', 'registersymbol(Item_AOB)',
+        'newmem:', 'code:', '  mov [eax+000000E8],ecx', '  jmp return',
+        'Item_AOB:', '  jmp newmem', '  nop', 'return:',
+        '[DISABLE]', 'Item_AOB:', '  db 89 88 E8 00 00 00', 'unregistersymbol(*)', 'dealloc(*)', ''])
+    D = _entry(7, 'Item #2 Stock', body_d)
+
     # a group header with a script child, and a value entry: never features
     G = _entry(4, 'Helpers',
                children=_entry(5, 'Helper script', '[ENABLE]' + NL + '[DISABLE]' + NL, indent=8))
@@ -123,7 +132,7 @@ def fixture_table():
 
     return NL.join(['<?xml version="1.0" encoding="utf-8"?>',
                     '<CheatTable CheatEngineTableVersion="45">', '  <CheatEntries>']
-                   + A + B + C + G + V +
+                   + A + B + C + D + G + V +
                    ['  </CheatEntries>', '  <UserdefinedSymbols/>',
                     '  <Structures>', '  </Structures>', '</CheatTable>']) + NL
 
@@ -133,7 +142,8 @@ MANIFESTS = {
         'game: Test Game', 'version: v1.2', 'table: v1.0', 'exe: TestGame.exe',
         'source: Raw.CT', 'init: auto', '',
         '[stats]', 'Unlimited Currency', '',
-        '[battle]', 'Unlimited Ammo -> Unlimited Ammo (Scroll Lock)', 'Unlimited Stamina', '']),
+        '[battle]', 'Unlimited Ammo -> Unlimited Ammo (Scroll Lock)', 'Unlimited Stamina', '',
+        '[extra]', 'Item #2 Stock -> Item #2 Stock  # the name keeps its #', '']),
     # two features renamed to the same thing, and one renamed to a name the
     # template already uses: sub-entries must still land under their own slot
     'dup-names': NL.join([
@@ -227,6 +237,26 @@ def main():
               and '[Sub Scripts]' in basic)
         check('unity init kept, .NET init dropped',
               'Initialize Unity' in basic and '.NET Engine' not in basic)
+        check('"#" inside a feature name survives the manifest',
+              '"Item #2 Stock"' in basic)
+        pl = py_lint(os.path.join(tmp, 'basic.py.ct'))
+        check('linter sees a big offset on a 32-bit register',
+              any('Item #2 Stock' in m and '0xE8' in m for _, m in pl), repr(pl))
+
+        # --- init typo is an error on both sides ---------------------------
+        bad = os.path.join(tmp, 'bad.manifest')
+        io.open(bad, 'w', encoding='utf-8', newline='').write(
+            MANIFESTS['basic'].replace('init: auto', 'init: unty'))
+        try:
+            build_release.build(bad, os.path.join(tmp, 'bad.ct'), date=DATE)
+            check('python rejects init: unty', False)
+        except SystemExit as e:
+            check('python rejects init: unty', 'init' in str(e), str(e))
+        try:
+            run_js(node, runner, core, tpl, src, bad, os.path.join(tmp, 'bad.js.ct'))
+            check('js rejects init: unty', False)
+        except RuntimeError as e:
+            check('js rejects init: unty', 'init must be' in str(e), str(e)[:200])
 
         dup = outputs['dup-names']
         # Ammo's children must sit inside the entry whose script is Ammo_AOB

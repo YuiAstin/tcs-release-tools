@@ -4,7 +4,11 @@
 Usage:
     python build_release.py <manifest file> [-o output.ct]
 
-Manifest format (plain text, '#' comments):
+Without -o the table is written to the CE tables folder ($TCS_TABLES, default
+D:\CE tables) when it exists, else next to the manifest.
+
+Manifest format (plain text; a '#' at line start, or one surrounded by
+whitespace, starts a comment - so "Item #2" is a valid feature name):
     game: Last Breath
     version: v1.0
     table: v1.0            # optional, default v1.0
@@ -27,6 +31,7 @@ Rules encoded here (see memory/aob-pattern-hygiene.md):
 - each script gets the credit header unless it already carries one
 """
 import io
+import os
 import re
 import sys
 import datetime
@@ -56,7 +61,7 @@ def parse_manifest(path):
     m = {'meta': {}, 'stats': [], 'battle': [], 'extra': []}
     section = None
     for raw in read(path).splitlines():
-        line = raw.split('#', 1)[0].strip()
+        line = re.split(r'(?:^|\s)#(?=\s|$)', raw, 1)[0].strip()
         if not line:
             continue
         if line.startswith('[') and line.endswith(']'):
@@ -317,6 +322,8 @@ def build(manifest_path, out_path=None, date=None):
 
     # --- init scripts: keep only what the scripts actually need
     init = meta.get('init', 'auto')
+    if init not in ('auto', 'unity', 'dotnet', 'none'):
+        sys.exit('init: must be auto, unity, dotnet or none (got "%s")' % init)
     if init == 'auto':
         bodies = re.findall(r'<AssemblerScript[^>]*>(.*?)</AssemblerScript>', src, re.S)
         uses_mono = any('aobscanregion(' in b or 'LaunchMonoDataCollector' in b for b in bodies)
@@ -432,7 +439,8 @@ def build(manifest_path, out_path=None, date=None):
     # NOTE: the raw table's <Structures> section is deliberately NOT carried over.
 
     if out_path is None:
-        out_path = Path(r'D:\CE tables') / (
+        tables = Path(os.environ.get('TCS_TABLES', r'D:\CE tables'))
+        out_path = (tables if tables.is_dir() else mdir) / (
             '%s %s_Table %s_The Cheat Script.ct' % (meta['game'], meta['version'], table_ver))
     io.open(out_path, 'w', encoding='utf-8', newline='').write(tpl)
 

@@ -540,7 +540,8 @@ footer { color: var(--muted); font-size: 12px; margin-top: 26px; }
     var parts = [], entries = [], offset = 0;
     files.forEach(function (f) {
       var nameB = enc.encode(f.name), data = enc.encode(f.text), crc = crc32(data);
-      var local = [].concat([0x50, 0x4B, 3, 4], u16(20), u16(0), u16(0), u16(0), u16(0),
+      // flag bit 11: names are UTF-8 (game titles are not always ASCII)
+      var local = [].concat([0x50, 0x4B, 3, 4], u16(20), u16(0x0800), u16(0), u16(0), u16(0),
         u32(crc), u32(data.length), u32(data.length), u16(nameB.length), u16(0));
       parts.push(new Uint8Array(local), nameB, data);
       entries.push({ nameB: nameB, crc: crc, len: data.length, off: offset });
@@ -548,7 +549,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 26px; }
     });
     var cd = [], cdLen = 0;
     entries.forEach(function (c) {
-      var h = [].concat([0x50, 0x4B, 1, 2], u16(20), u16(20), u16(0), u16(0), u16(0), u16(0),
+      var h = [].concat([0x50, 0x4B, 1, 2], u16(20), u16(20), u16(0x0800), u16(0), u16(0), u16(0),
         u32(c.crc), u32(c.len), u32(c.len), u16(c.nameB.length), u16(0), u16(0),
         u16(0), u16(0), u32(0), u32(c.off));
       cd.push(new Uint8Array(h), c.nameB);
@@ -633,7 +634,8 @@ footer { color: var(--muted); font-size: 12px; margin-top: 26px; }
     function fallback() {
       area.hidden = false; area.value = state.built.output; area.focus(); area.select();
       toast.className = 'toast';
-      toast.textContent = 'Press Ctrl+C to copy, then paste into a file named ' + state.built.filename;
+      toast.textContent = 'Press Ctrl+C to copy, then paste into a file named ' + state.built.filename
+        + '. Save it with Windows (CRLF) line endings - the text box may hand you LF - then lint the file below.';
     }
     try {
       navigator.clipboard.writeText(state.built.output).then(function () {

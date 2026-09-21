@@ -299,7 +299,7 @@
   function parseManifest(text) {
     var cfg = { stats: [], battle: [], extra: [] }, section = null;
     text.split(/\r?\n/).forEach(function (raw) {
-      var line = raw.split('#')[0].trim();
+      var line = raw.split(/(?:^|\s)#(?=\s|$)/)[0].trim();
       if (!line) return;
       if (line.charAt(0) === '[' && line.charAt(line.length - 1) === ']') {
         var s = line.slice(1, -1).toLowerCase();
@@ -461,6 +461,8 @@
 
     // init scripts
     var init = cfg.init || 'auto';
+    if (['auto', 'unity', 'dotnet', 'none'].indexOf(init) < 0)
+      throw new Error('init must be auto, unity, dotnet or none (got "' + init + '")');
     if (init === 'auto') {
       var bodies = findAll(/<AssemblerScript[^>]*>([\s\S]*?)<\/AssemblerScript>/g, src)
         .map(function (m) { return m[1]; });
@@ -600,6 +602,10 @@
   /* lint                                                               */
   /* ------------------------------------------------------------------ */
 
+  // [reg+off] / [reg+reg*n+off]; 64-bit (rax, r8d...) and 32-bit (eax, esi...)
+  var REG = '(?:r[a-z0-9]+|e[a-z]{2}|[abcd]x|[sd]i|[sb]p)';
+  var OFFSET_RE = new RegExp('\\[' + REG + '(?:\\+' + REG + '(?:\\*\\d)?)?\\+([0-9A-Fa-f]{2,})\\]', 'g');
+
   function stripComments(body) {
     return body.replace(/\{[\s\S]*?\}/g, '')
                .replace(/\/\*[\s\S]*?\*\//g, '')
@@ -670,9 +676,9 @@
 
       var hasReadmem = code.indexOf('readmem(') >= 0;
       var seen = {};
-      findAll(/\[(?:r[a-z0-9]+)(?:\+r[a-z0-9]+\*\d)?\+([0-9A-Fa-f]{2,})\]/g, code)
+      findAll(OFFSET_RE, code)
         .forEach(function (om) { seen[om[1]] = true; });
-      Object.keys(seen).forEach(function (off) {
+      Object.keys(seen).sort().forEach(function (off) {
         var v = parseInt(off, 16);
         if (v > 0x60 && !hasReadmem)
           warn(name + ': hardcoded offset 0x' + v.toString(16).toUpperCase() +

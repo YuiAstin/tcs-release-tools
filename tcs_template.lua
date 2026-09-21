@@ -6,7 +6,8 @@ ColonelRVH-style hardened injection script from the instruction selected
 in the Memory Viewer:
 
   - AOB extended over following instructions until it has enough anchor bytes
-  - disp32 offsets > 0x60 masked with * (and rebuilt via readmem in code)
+  - memory displacements beyond ±0x60 masked with * (located by decoding
+    ModRM/SIB, so a ModRM or immediate byte is never mistaken for them)
   - call/jmp rel32 displacements masked; short jcc rel8 kept (stable enough)
   - trailing wildcards trimmed (they add nothing)
   - original bytes saved to <sym>_CodeSave at enable; [DISABLE] restores via
@@ -39,30 +40,84 @@ TCS.HEADER = table.concat({
  "  do not re-upload or claim as your own.",
  "=================================================*/"}, "\n")
 
+-- little-endian value of width bytes at position at (1-based)
+local function readLE(bytes, at, width)
+  local v = 0
+  for k = width, 1, -1 do
+    v = v * 256 + bytes[at + k - 1]
+  end
+  return v
+end
+
 -- find the little-endian encoding of value (width bytes) inside bytes,
--- searching from position 'from' (1-based); returns start index or nil
+-- searching from position 'from' (1-based); returns start index or nil.
+-- Only a fallback: dispPosition below knows where the displacement really is.
 local function findLE(bytes, value, width, from)
+  local wrap = 2 ^ (8 * width)
+  value = value % wrap                      -- negative -> two's complement
   for i = from or 1, #bytes - width + 1 do
-    local v, ok = 0, true
-    for k = width, 1, -1 do
-      v = v * 256 + bytes[i + k - 1]
-    end
-    if v == value then
-      -- avoid matching inside the opcode: require it to be in the tail half
+    if readLE(bytes, i, width) == value then
       return i
     end
   end
   return nil
 end
 
--- constants referenced by an instruction, parsed from its disassembly text:
--- memory offsets like [rcx+000000E8] / [rdx+rax*8+0C]
-local function textOffsets(text)
-  local out = {}
-  for hexs in string.gmatch(text, "%+([0-9A-Fa-f]+)%]") do
-    out[#out + 1] = tonumber(hexs, 16)
+-- Where the memory operand's displacement sits, decoded from the encoding:
+-- [legacy prefixes][REX | VEX | EVEX][opcode][ModRM][SIB][disp][imm].
+-- Returns start index (1-based) and width (1 or 4), or nil when the
+-- instruction has no displacement (or is not something we can decode).
+local function dispPosition(bytes)
+  local n, i = #bytes, 1
+  local LEGACY = { [0x66]=1, [0x67]=1, [0xF2]=1, [0xF3]=1, [0xF0]=1,
+                   [0x2E]=1, [0x36]=1, [0x3E]=1, [0x26]=1, [0x64]=1, [0x65]=1 }
+  while i <= n and LEGACY[bytes[i]] do i = i + 1 end
+  if i > n then return nil end
+  local b = bytes[i]
+  if b == 0xC5 then            -- 2-byte VEX: 1 payload byte, then opcode
+    i = i + 2
+  elseif b == 0xC4 then        -- 3-byte VEX: 2 payload bytes
+    i = i + 3
+  elseif b == 0x62 then        -- EVEX: 3 payload bytes
+    i = i + 4
+  else
+    if b >= 0x40 and b <= 0x4F then i = i + 1 end   -- REX
+    if i > n then return nil end
+    if bytes[i] == 0x0F then
+      i = i + 1
+      if i <= n and (bytes[i] == 0x38 or bytes[i] == 0x3A) then i = i + 1 end
+    end
+    i = i + 1                  -- past the (last) opcode byte
   end
-  return out
+  if i > n then return nil end
+  local modrm = bytes[i]
+  local mod = math.floor(modrm / 64)
+  local rm = modrm % 8
+  if mod == 3 then return nil end            -- register operand, no memory
+  i = i + 1                                  -- past ModRM
+  local sibBase = nil
+  if rm == 4 then                            -- SIB follows
+    if i > n then return nil end
+    sibBase = bytes[i] % 8
+    i = i + 1
+  end
+  local width
+  if mod == 1 then width = 1
+  elseif mod == 2 then width = 4
+  elseif mod == 0 and (rm == 5 or sibBase == 5) then width = 4   -- rip/abs disp32
+  else return nil end
+  if i + width - 1 > n then return nil end
+  return i, width
+end
+
+-- displacement referenced by an instruction, parsed from its disassembly
+-- text: [rcx+000000E8] / [rdx+rax*8+0C] / [rcx-00000100] -> signed value
+local function textOffset(text)
+  local sign, hexs = string.match(text, "([%+%-])([0-9A-Fa-f]+)%]")
+  if hexs == nil then return nil end
+  local v = tonumber(hexs, 16)
+  if sign == "-" then v = -v end
+  return v
 end
 
 -- analyze one instruction -> mask (array of booleans, true = wildcard)
@@ -83,22 +138,23 @@ function TCS.maskInstruction(bytes, text)
   end
   -- short jcc / jmp rel8: displacement kept on purpose (intra-function)
 
-  -- big memory offsets
+  -- big memory offsets (positive or negative)
   local rebuilt = false
-  local searchFrom = 2
-  for _, v in ipairs(textOffsets(text)) do
-    if v > TCS.BIG_OFFSET then
-      local at = findLE(bytes, v, 4, searchFrom)
-      local w = 4
-      if not at and v <= 0xFF then
-        at = findLE(bytes, v, 1, searchFrom)
-        w = 1
+  local v = textOffset(text)
+  if v ~= nil and math.abs(v) > TCS.BIG_OFFSET then
+    -- the encoding says exactly where the displacement is; the text value
+    -- must agree (sign-extended), else fall back to searching the bytes
+    local at, w = dispPosition(bytes)
+    if at ~= nil and readLE(bytes, at, w) ~= v % (2 ^ (8 * w)) then at = nil end
+    if at == nil then
+      at, w = findLE(bytes, v, 4, 2), 4
+      if at == nil and v >= -0x80 and v <= 0xFF then
+        at, w = findLE(bytes, v, 1, 2), 1
       end
-      if at then
-        for i = at, at + w - 1 do mask[i] = true end
-        searchFrom = at + w
-        rebuilt = true
-      end
+    end
+    if at ~= nil then
+      for i = at, at + w - 1 do mask[i] = true end
+      rebuilt = true
     end
   end
   return mask, rebuilt
@@ -527,9 +583,11 @@ end
 -- CE main menu: TCS > Build Release / Lint / Open Tools Folder    --
 --------------------------------------------------------------------
 if getMainForm ~= nil and createMenuItem ~= nil then
-  local TOOLS  = [[D:\CE tables\tools]]
-  local TABLES = [[D:\CE tables]]
-  local PYTHON = 'python'   -- if not on PATH, put the full python.exe path here
+  -- folders: environment variables win over the defaults below
+  local TOOLS  = os.getenv('TCS_TOOLS')  or [[D:\CE tables\tools]]
+  local TABLES = os.getenv('TCS_TABLES') or [[D:\CE tables]]
+  local PYTHON = os.getenv('TCS_PYTHON') or 'python'
+                            -- if not on PATH, set TCS_PYTHON to the full python.exe path
                             -- (a path with spaces needs cmd's extra outer quotes)
 
   local function runToLog(argline)
