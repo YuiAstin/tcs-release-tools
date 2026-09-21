@@ -129,11 +129,19 @@ teammates outside the org - so the list rides in `template.ct` instead.
 - `build_release.py` keeps the `[Stats+]`/`[Battle+]` wrapper groups when a
   category overflows its top-level slots (4th+ stats, 5th+ battle) — that is
   template-conventional; hand-flattening like we did for Last Breath is optional.
-- Init scripts: `init: auto` keeps the Unity init only if scripts use mono
-  symbols (`aobscanregion`/`Class:Method`); plain `aobscanmodule` tables get none.
+- Init scripts: `init: auto` keeps the Unity init only if a **selected** script
+  uses mono symbols (`Class:Method`, or `LaunchMonoDataCollector`); otherwise
+  the release gets no init script.
   Any other value than `auto`/`unity`/`dotnet`/`none` is an error.
 - Manifest names may contain `#` (`Item #2`): only a `#` at line start, or one
-  surrounded by whitespace, starts a comment.
+  surrounded by whitespace, starts a comment. `&`, `<`, `>` in names are
+  written as XML entities once (`Ammo & Fuel` and `Ammo &amp; Fuel` both work).
+- Features may live inside folders in the work table (the page lists them with
+  their folder; the manifest names them by description). If a name occurs more
+  than once, the first occurrence is used and a WARN says so; a feature whose
+  script is identical to another entry's also gets a WARN.
+- Anything before `[ENABLE]` (a `{$lua}` block, say) is kept when the credit
+  header is added; only CE's `{ Game: ... Author: ... }` boilerplate comment is dropped.
 - The page's "Copy table XML" fallback (used when the clipboard is blocked)
   goes through a text box, which may hand back LF line endings; the toast
   says so and the in-page linter catches it.

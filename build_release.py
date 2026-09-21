@@ -113,6 +113,80 @@ def extract_entry(text, desc):
     return ''.join(lines[s:e + 1])
 
 
+def xml_escape(text):
+    return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+
+
+def xml_unescape(text):
+    return text.replace('&lt;', '<').replace('&gt;', '>').replace('&amp;', '&')
+
+
+def xml_text(name):
+    """A description as it must appear in the table: escape once, whether the
+    manifest wrote 'Ammo & Fuel' or (copied from the table) 'Ammo &amp; Fuel'."""
+    return xml_escape(xml_unescape(name))
+
+
+def strip_comments(body):
+    body = re.sub(r'\{(?!\$).*?\}', '', body, flags=re.S)   # {...} blocks (not {$lua})
+    body = re.sub(r'/\*.*?\*/', '', body, flags=re.S)       # /* ... */
+    return re.sub(r'//[^\r\n]*', '', body)                  # // lines
+
+
+# Class:Method / Namespace.Class:Method - a mono (Unity) symbol reference
+MONO_SYMBOL = re.compile(r'[A-Za-z_][\w.]*:[A-Za-z_.][\w.]*')
+
+
+def uses_mono(body):
+    code = strip_comments(body)
+    return 'LaunchMonoDataCollector' in code or MONO_SYMBOL.search(code) is not None
+
+
+def list_scripts(text):
+    """Every entry with a script of its own, at any depth: [(name, path, body)]
+    where path is the folder chain ('Old stuff / Unlimited HP'). Children of a
+    script entry are its sub-scripts, not features, so they are not listed.
+    The TCS Dev Starter's button entries are skipped."""
+    lines = text.splitlines(keepends=True)
+    out, stack, i = [], [], 0
+    while i < len(lines):
+        if '<CheatEntry>' in lines[i]:
+            s, e = entry_bounds(lines, '<CheatEntry>', i)
+            block = ''.join(lines[s:e + 1])
+            m = re.search(r'<Description>"([^"]*)"</Description>', block)
+            name = m.group(1) if m else ''
+            if name.find('TCS Dev Starter') >= 0 or 'TCS.createTableScript' in block:
+                i = e + 1
+                continue
+            if has_own_script(block):
+                out.append((name, ' / '.join(stack + [name]), get_script_body(block)))
+                i = e + 1
+                continue
+            stack.append(name)
+            j = i + 1          # descend: scan the children, then pop at </CheatEntry>
+            i = j
+            continue
+        if '</CheatEntry>' in lines[i] and stack:
+            stack.pop()
+        i += 1
+    return out
+
+
+def with_credit_header(body, header):
+    """Prepend the credit header, keeping any {$lua}/{$asm} or other code that
+    sits before [ENABLE]; only CE's boilerplate { Game: ... Author: ... }
+    comment (and blank lines) are dropped."""
+    if 'Cheat Script by ColonelRVH' in body:
+        return body
+    en = body.find('[ENABLE]')
+    if en < 0:
+        return header + body
+    pre = re.sub(r'\{(?!\$).*?\}', '', body[:en], flags=re.S).lstrip()
+    if pre and not pre.endswith('\n'):
+        pre += NL
+    return header + pre + body[en:]
+
+
 def has_own_script(entry_text):
     """An entry's OWN script sits before its nested <CheatEntries>; a group
     header with script children has none of its own (and taking the first
@@ -292,6 +366,7 @@ def synth_children(body, base_indent, take_id):
 # ---------------- main build ----------------
 
 def build(manifest_path, out_path=None, date=None):
+    warnings = []
     mdir = Path(manifest_path).resolve().parent
     m = parse_manifest(manifest_path)
     meta = m['meta']
@@ -320,14 +395,23 @@ def build(manifest_path, out_path=None, date=None):
     he = tpl.index('\n', he) + 1
     header = tpl[h:he]
 
-    # --- init scripts: keep only what the scripts actually need
+    # --- init scripts: keep only what the SELECTED scripts actually need
     init = meta.get('init', 'auto')
     if init not in ('auto', 'unity', 'dotnet', 'none'):
         sys.exit('init: must be auto, unity, dotnet or none (got "%s")' % init)
     if init == 'auto':
-        bodies = re.findall(r'<AssemblerScript[^>]*>(.*?)</AssemblerScript>', src, re.S)
-        uses_mono = any('aobscanregion(' in b or 'LaunchMonoDataCollector' in b for b in bodies)
-        init = 'unity' if uses_mono else 'none'
+        chosen = ''
+        for cat in ('stats', 'battle', 'extra'):
+            for src_name, _ in m[cat]:
+                needle = '<Description>"%s"</Description>' % src_name
+                if needle not in src:
+                    src_name = xml_text(src_name)
+                try:
+                    chosen += extract_entry(src, src_name)
+                except KeyError:
+                    pass          # reported properly by the slot loop below
+        bodies = re.findall(r'<AssemblerScript[^>]*>(.*?)</AssemblerScript>', chosen, re.S)
+        init = 'unity' if any(uses_mono(b) for b in bodies) else 'none'
     if init == 'none':
         tpl = delete_entry(tpl, '"=== Init Script [Delete If Not Needed] ==="')
     else:
@@ -340,8 +424,8 @@ def build(manifest_path, out_path=None, date=None):
     # --- header entry
     today = date or datetime.date.today().isoformat()
     tpl = re.sub(r'"Game v \| Cheat Engine Table v1\.0 \| [0-9-]+ The Cheat Script"',
-                 '"%s %s | Cheat Engine Table %s | %s The Cheat Script"'
-                 % (meta['game'], meta['version'], table_ver, today), tpl)
+                 lambda _: '"%s %s | Cheat Engine Table %s | %s The Cheat Script"'
+                 % (xml_text(meta['game']), xml_text(meta['version']), xml_text(table_ver), today), tpl)
 
     # --- always-pruned sections (absent from a pre-cleaned template: fine)
     for needle in ('"[Niche Usage]', '"[Misc.][!]"', '[TOOLBOX/TEMPLATES'):
@@ -353,6 +437,16 @@ def build(manifest_path, out_path=None, date=None):
     # --- avoid ID collisions between template and imported children
     tpl_ids = entry_ids(tpl)
 
+    # --- every script in the raw table, for duplicate-name / same-code warnings
+    scripts = list_scripts(src)
+
+    def norm(b):
+        return re.sub(r'\s+', ' ', strip_dev_notes(b)).strip()
+
+    def warn(msg):
+        warnings.append(msg)
+        print('WARN', msg)
+
     # --- fill slots
     for cat in ('stats', 'battle', 'extra'):
         top, plus, plus_desc = SLOTS[cat]
@@ -361,15 +455,27 @@ def build(manifest_path, out_path=None, date=None):
             sys.exit('too many %s features (%d max)' % (cat, len(top) + len(plus)))
         order = top + plus
         for slot, (src_name, rel_name) in zip(order, feats):
+            # the manifest may spell the name as shown ('Ammo & Fuel') or as
+            # stored in the table ('Ammo &amp; Fuel')
+            if '<Description>"%s"</Description>' % src_name not in src:
+                if '<Description>"%s"</Description>' % xml_text(src_name) in src:
+                    src_name = xml_text(src_name)
             entry = extract_entry(src, src_name)
             if not has_own_script(entry):
                 sys.exit('"%s" has no Auto Assembler script of its own, so it cannot'
                          ' fill a slot - remove it from the manifest. (Group headers,'
                          ' pointers and value entries are not features.)' % src_name)
             body = strip_dev_notes(get_script_body(entry))
-            if 'Cheat Script by ColonelRVH' not in body:
-                body = header + body[body.index('[ENABLE]'):] if '[ENABLE]' in body else header + body
+            same_name = [p for n, p, _ in scripts if n == src_name]
+            if len(same_name) > 1:
+                warn('"%s" appears %d times in the raw table (%s); using the first'
+                     % (src_name, len(same_name), ', '.join(same_name)))
+            twins = [p for n, p, b in scripts if n != src_name and norm(b) == norm(body)]
+            if twins:
+                warn('"%s" has the same script as %s' % (src_name, ', '.join(twins)))
+            body = with_credit_header(body, header)
             children = get_children_block(entry)
+            rel_name = xml_text(rel_name)
 
             def take_id():
                 nid = 10000
@@ -446,7 +552,10 @@ def build(manifest_path, out_path=None, date=None):
 
     # sanity
     import xml.etree.ElementTree as ET
-    ET.parse(out_path)
+    try:
+        ET.parse(out_path)
+    except ET.ParseError as e:
+        sys.exit('built table is not well-formed XML (%s) - check names for stray < or &' % e)
     data = open(out_path, 'rb').read()
     assert data.count(b'\n') == data.count(b'\r\n'), 'mixed line endings'
     assert 'TCS.' not in tpl or not re.search(r'<Description>"TCS\.', tpl), 'leftover slots'

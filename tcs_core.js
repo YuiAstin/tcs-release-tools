@@ -162,6 +162,33 @@
   function xmlUnescape(s) {
     return String(s).replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
   }
+  // a description as it must appear in the table: escaped exactly once,
+  // whether given as shown ('Ammo & Fuel') or as stored ('Ammo &amp; Fuel')
+  function xmlText(name) { return xmlEscape(xmlUnescape(name)); }
+
+  function stripCodeComments(body) {
+    return body.replace(/\{(?!\$)[\s\S]*?\}/g, '')   // {...} blocks (not {$lua})
+               .replace(/\/\*[\s\S]*?\*\//g, '')
+               .replace(/\/\/[^\r\n]*/g, '');
+  }
+  // Class:Method / Namespace.Class:Method - a mono (Unity) symbol reference
+  var MONO_SYMBOL = /[A-Za-z_][\w.]*:[A-Za-z_.][\w.]*/;
+  function usesMono(body) {
+    var code = stripCodeComments(body);
+    return code.indexOf('LaunchMonoDataCollector') >= 0 || MONO_SYMBOL.test(code);
+  }
+
+  // Prepend the credit header, keeping any {$lua}/{$asm} or other code that
+  // sits before [ENABLE]; only CE's boilerplate { Game: ... Author: ... }
+  // comment (and blank lines) are dropped.
+  function withCreditHeader(body, header) {
+    if (body.indexOf('Cheat Script by ColonelRVH') >= 0) return body;
+    var en = body.indexOf('[ENABLE]');
+    if (en < 0) return header + body;
+    var pre = body.slice(0, en).replace(/\{(?!\$)[\s\S]*?\}/g, '').replace(/^\s+/, '');
+    if (pre && pre.slice(-1) !== '\n') pre += NL;
+    return header + pre + body.slice(en);
+  }
 
   // "-------               July 2026 Supporters                -------"
   // centred in the template's 51-char inner field
@@ -417,30 +444,32 @@
            desc.indexOf('TCS Dev Starter') >= 0;
   }
 
-  // Describe a raw table's top-level entries (for the UI), skipping the
-  // dev-starter scaffolding. Returns [{name, hasScript}] — a work table is
-  // mostly value/pointer entries, and only script entries can fill a slot.
-  function listTopEntries(src) {
+  // Every entry with a script of its own, at any depth: [{name, path, body}]
+  // where path is the folder chain ('Old stuff / Unlimited HP'). Children of
+  // a script entry are its sub-scripts, not features, so they are not listed.
+  // The TCS Dev Starter's button entries are skipped.
+  function listScripts(src) {
     var lines = splitKeep(src);
-    var out = [], depth = 0, start = -1;
-    for (var i = 0; i < lines.length; i++) {
-      var ln = lines[i];
-      var opens = count(ln, '<CheatEntry>');
-      var closes = count(ln, '</CheatEntry>');
-      if (opens && depth === 0) start = i;
-      depth += opens;
-      if (closes) {
-        depth -= closes;
-        if (depth <= 0 && start >= 0) {
-          var block = lines.slice(start, i + 1).join('');
-          var m = /<Description>"([^"]*)"<\/Description>/.exec(block);
-          if (m && !isStarterScaffold(block, m[1])) {
-            out.push({ name: m[1], hasScript: hasOwnScript(block) });
-          }
-          start = -1;
-          depth = 0;
+    var out = [], stack = [], i = 0;
+    while (i < lines.length) {
+      if (lines[i].indexOf('<CheatEntry>') >= 0) {
+        var se = entryBounds(lines.slice(i), '<CheatEntry>');
+        var s0 = i + se[0], e0 = i + se[1];
+        var block = lines.slice(s0, e0 + 1).join('');
+        var m = /<Description>"([^"]*)"<\/Description>/.exec(block);
+        var name = m ? m[1] : '';
+        if (isStarterScaffold(block, name)) { i = e0 + 1; continue; }
+        if (hasOwnScript(block)) {
+          out.push({ name: name, path: stack.concat([name]).join(' / '), body: getScriptBody(block) });
+          i = e0 + 1;
+          continue;
         }
+        stack.push(name);
+        i++;
+        continue;
       }
+      if (lines[i].indexOf('</CheatEntry>') >= 0 && stack.length) stack.pop();
+      i++;
     }
     return out;
   }
@@ -449,6 +478,8 @@
    *        stats: [[src, rel], ...], battle: [...], extra: [...] }   */
   function buildRelease(tpl, src, cfg) {
     var tableVer = cfg.table || 'v1.0';
+    var warnings = [];
+    function warn(m) { warnings.push(m); }
 
     if (!(cfg.stats.length || cfg.battle.length || cfg.extra.length))
       throw new Error('no features assigned to any category');
@@ -459,17 +490,23 @@
     he = idx(tpl, '\n', he) + 1;
     var header = tpl.slice(h, he);
 
-    // init scripts
+    // init scripts: keep only what the SELECTED scripts actually need
     var init = cfg.init || 'auto';
     if (['auto', 'unity', 'dotnet', 'none'].indexOf(init) < 0)
       throw new Error('init must be auto, unity, dotnet or none (got "' + init + '")');
     if (init === 'auto') {
-      var bodies = findAll(/<AssemblerScript[^>]*>([\s\S]*?)<\/AssemblerScript>/g, src)
-        .map(function (m) { return m[1]; });
-      var usesMono = bodies.some(function (b) {
-        return b.indexOf('aobscanregion(') >= 0 || b.indexOf('LaunchMonoDataCollector') >= 0;
+      var chosen = '';
+      ['stats', 'battle', 'extra'].forEach(function (cat) {
+        cfg[cat].forEach(function (feat) {
+          var n = feat[0];
+          if (src.indexOf('<Description>"' + n + '"</Description>') < 0) n = xmlText(n);
+          try { chosen += extractEntry(src, n); }
+          catch (e) { if (!e.notFound) throw e; }   // reported by the slot loop
+        });
       });
-      init = usesMono ? 'unity' : 'none';
+      var bodies = findAll(/<AssemblerScript[^>]*>([\s\S]*?)<\/AssemblerScript>/g, chosen)
+        .map(function (m) { return m[1]; });
+      init = bodies.some(usesMono) ? 'unity' : 'none';
     }
     if (init === 'none') {
       tpl = deleteEntry(tpl, '"=== Init Script [Delete If Not Needed] ==="');
@@ -482,8 +519,10 @@
 
     // header entry
     tpl = tpl.replace(/"Game v \| Cheat Engine Table v1\.0 \| [0-9-]+ The Cheat Script"/,
-      '"' + cfg.game + ' ' + cfg.version + ' | Cheat Engine Table ' + tableVer +
-      ' | ' + cfg.date + ' The Cheat Script"');
+      function () {
+        return '"' + xmlText(cfg.game) + ' ' + xmlText(cfg.version) + ' | Cheat Engine Table ' +
+               xmlText(tableVer) + ' | ' + cfg.date + ' The Cheat Script"';
+      });
 
     // always-pruned sections (absent from a pre-cleaned template: fine)
     ['"[Niche Usage]', '"[Misc.][!]"', '[TOOLBOX/TEMPLATES'].forEach(function (n) {
@@ -493,6 +532,10 @@
 
     var tplIds = entryIds(tpl);
 
+    // every script in the raw table, for duplicate-name / same-code warnings
+    var scripts = listScripts(src);
+    function norm(b) { return stripDevNotes(b).replace(/\s+/g, ' ').trim(); }
+
     ['stats', 'battle', 'extra'].forEach(function (cat) {
       var top = SLOTS[cat][0], plus = SLOTS[cat][1], plusDesc = SLOTS[cat][2];
       var feats = cfg[cat];
@@ -501,7 +544,12 @@
       var order = top.concat(plus);
 
       feats.forEach(function (feat, fi) {
-        var slot = order[fi], srcName = feat[0], relName = feat[1];
+        var slot = order[fi], srcName = feat[0], relName = xmlText(feat[1]);
+        // the name may be given as shown ('Ammo & Fuel') or as stored in the
+        // table ('Ammo &amp; Fuel')
+        if (src.indexOf('<Description>"' + srcName + '"</Description>') < 0 &&
+            src.indexOf('<Description>"' + xmlText(srcName) + '"</Description>') >= 0)
+          srcName = xmlText(srcName);
         var entry = extractEntry(src, srcName);
         if (!hasOwnScript(entry)) {
           throw new Error('"' + srcName + '" has no Auto Assembler script of its own,'
@@ -509,10 +557,14 @@
             + ' and value entries are not features.)');
         }
         var body = stripDevNotes(getScriptBody(entry));
-        if (body.indexOf('Cheat Script by ColonelRVH') < 0) {
-          var en = body.indexOf('[ENABLE]');
-          body = en >= 0 ? header + body.slice(en) : header + body;
-        }
+        var sameName = scripts.filter(function (x) { return x.name === srcName; }).map(function (x) { return x.path; });
+        if (sameName.length > 1)
+          warn('"' + srcName + '" appears ' + sameName.length + ' times in the raw table (' +
+               sameName.join(', ') + '); using the first');
+        var twins = scripts.filter(function (x) { return x.name !== srcName && norm(x.body) === norm(body); })
+                           .map(function (x) { return x.path; });
+        if (twins.length) warn('"' + srcName + '" has the same script as ' + twins.join(', '));
+        body = withCreditHeader(body, header);
         var children = getChildrenBlock(entry);
 
         function takeId() {
@@ -595,6 +647,7 @@
     return {
       output: tpl,
       filename: cfg.game + ' ' + cfg.version + '_Table ' + tableVer + '_The Cheat Script.ct',
+      warnings: warnings,
     };
   }
 
@@ -712,7 +765,9 @@
   return {
     buildRelease: buildRelease,
     lintTable: lintTable,
-    listTopEntries: listTopEntries,
+    listScripts: listScripts,
+    xmlEscape: xmlEscape,
+    xmlUnescape: xmlUnescape,
     stripDevNotes: stripDevNotes,
     parseSupporters: parseSupporters,
     applySupporters: applySupporters,
