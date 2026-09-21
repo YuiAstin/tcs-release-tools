@@ -313,6 +313,21 @@ def main():
             hashes.add(open(out, 'rb').read())
         check('python output identical across hash seeds', len(hashes) == 1)
 
+        # --- supporter header keeps the template's fixed 15/16 spacing ---------
+        r = subprocess.run([node, '-e', """
+            const T = require(process.argv[1]); const fs = require('fs');
+            const tpl = fs.readFileSync(process.argv[2], 'utf8');
+            const s = T.parseSupporters(tpl);
+            const aug = T.applySupporters(tpl, Object.assign({}, s, { month: 'August' }));
+            process.stdout.write(JSON.stringify({
+              idem: T.applySupporters(tpl, s) === tpl,
+              aug: /"(-+ +August \\d{4} Supporters +-+)"/.exec(aug)[1],
+            }));""", core, tpl], capture_output=True, text=True)
+        sup = json.loads(r.stdout)
+        check('applySupporters(parseSupporters(tpl)) is a no-op on the template', sup['idem'])
+        check('supporter header: 15 spaces before the label, 16 after, for any month',
+              re.match(r'^-{7} {15}August \d{4} Supporters {16}-{7}$', sup['aug']) is not None, sup['aug'])
+
         # --- remap helper never touches hotkey blocks ---------------------
         sample = ('<CheatEntry><ID>0</ID><Hotkeys><Hotkey><ID>0</ID></Hotkey></Hotkeys>'
                   '</CheatEntry>')
