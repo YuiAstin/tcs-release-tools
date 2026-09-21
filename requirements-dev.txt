@@ -1,0 +1,2 @@
+# for test_tcs_lua.py (test_parity.py additionally needs node on PATH)
+lupa

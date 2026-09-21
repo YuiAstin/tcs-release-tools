@@ -87,6 +87,30 @@ plan4 = TCS.analyze(mid)
 check('small offsets: nothing masked',
       '*' not in plan4.pattern, repr(plan4.pattern))
 
+# --- displacement located by decoding ModRM/SIB, not by searching for the value
+_tail = [instr([0x48, 0x85, 0xC0], 'test rax,rax')] * 3
+def _pat(first):
+    return TCS.analyze(T({i + 1: x for i, x in enumerate([first] + _tail)})).pattern
+for name, first, want in [
+    ('ModRM byte equal to disp8 is not the one masked',
+     instr([0x8B, 0x70, 0x70], 'mov esi,[rax+70]'), '8B 70 *'),
+    ('negative disp32 masked',
+     instr([0x48, 0x8B, 0x81, 0x00, 0xFF, 0xFF, 0xFF], 'mov rax,[rcx-00000100]'), '48 8B 81 * * * *'),
+    ('immediate equal to disp32 stays literal',
+     instr([0xC7, 0x81, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00], 'mov [rcx+00000100],00000100'),
+     'C7 81 * * * * 00 01 00 00'),
+    ('SIB: disp after the SIB byte',
+     instr([0x8B, 0x84, 0xC1, 0x00, 0x02, 0x00, 0x00], 'mov eax,[rcx+rax*8+00000200]'), '8B 84 C1 * * * *'),
+    ('VEX-encoded: disp after VEX prefix + opcode',
+     instr([0xC5, 0xFA, 0x10, 0x81, 0x00, 0x02, 0x00, 0x00], 'vmovss xmm0,[rcx+00000200]'), 'C5 FA 10 81 * * * *'),
+    ('66 0F two-byte opcode',
+     instr([0x66, 0x0F, 0x6F, 0x81, 0x00, 0x02, 0x00, 0x00], 'movdqa xmm0,[rcx+00000200]'), '66 0F 6F 81 * * * *'),
+    ('small negative disp8 kept',
+     instr([0x48, 0x8B, 0x41, 0xF8], 'mov rax,[rcx-08]'), '48 8B 41 F8'),
+]:
+    got = _pat(first)
+    check('decode: ' + name, got.startswith(want + ' '), repr(got))
+
 # --- formatDisasm: address, bytes, opcode order with aligned opcode column
 di = TCS.formatDisasm(T({
     1: T({'addr': 'GameAssembly.dll+4E8CA0', 'bytes': '83 B9 E8 00 00 00 00',

@@ -4,7 +4,11 @@
 Usage:
     python build_release.py <manifest file> [-o output.ct]
 
-Manifest format (plain text, '#' comments):
+Without -o the table is written to the CE tables folder ($TCS_TABLES, default
+D:\CE tables) when it exists, else next to the manifest.
+
+Manifest format (plain text; a '#' at line start, or one surrounded by
+whitespace, starts a comment - so "Item #2" is a valid feature name):
     game: Last Breath
     version: v1.0
     table: v1.0            # optional, default v1.0
@@ -27,6 +31,7 @@ Rules encoded here (see memory/aob-pattern-hygiene.md):
 - each script gets the credit header unless it already carries one
 """
 import io
+import os
 import re
 import sys
 import datetime
@@ -56,7 +61,7 @@ def parse_manifest(path):
     m = {'meta': {}, 'stats': [], 'battle': [], 'extra': []}
     section = None
     for raw in read(path).splitlines():
-        line = raw.split('#', 1)[0].strip()
+        line = re.split(r'(?:^|\s)#(?=\s|$)', raw, 1)[0].strip()
         if not line:
             continue
         if line.startswith('[') and line.endswith(']'):
@@ -134,6 +139,26 @@ def strip_dev_notes(body):
         r'//  offset-agnostic form \(swap in for release\):\r?\n'
         r'(?://    [^\r\n]*\r?\n)*',
         '', body)
+
+
+HOTKEY_BLOCK = re.compile(r'<Hotkeys>.*?</Hotkeys>', re.S)
+
+
+def entry_ids(text):
+    """CheatEntry IDs only. <Hotkey> blocks carry their own <ID> tags (small
+    per-record indexes) which must neither count as taken nor be remapped."""
+    return set(re.findall(r'<ID>(\d+)</ID>', HOTKEY_BLOCK.sub('', text)))
+
+
+def remap_entry_ids(text, mapping):
+    """Rewrite entry <ID> tags per mapping, leaving <Hotkeys> blocks untouched."""
+    out = []
+    for i, part in enumerate(re.split(r'(<Hotkeys>.*?</Hotkeys>)', text, flags=re.S)):
+        if i % 2 == 0:
+            for old, new in mapping:
+                part = part.replace('<ID>%s</ID>' % old, '<ID>%s</ID>' % new)
+        out.append(part)
+    return ''.join(out)
 
 
 def get_children_block(entry_text):
@@ -266,7 +291,7 @@ def synth_children(body, base_indent, take_id):
 
 # ---------------- main build ----------------
 
-def build(manifest_path, out_path=None):
+def build(manifest_path, out_path=None, date=None):
     mdir = Path(manifest_path).resolve().parent
     m = parse_manifest(manifest_path)
     meta = m['meta']
@@ -297,6 +322,8 @@ def build(manifest_path, out_path=None):
 
     # --- init scripts: keep only what the scripts actually need
     init = meta.get('init', 'auto')
+    if init not in ('auto', 'unity', 'dotnet', 'none'):
+        sys.exit('init: must be auto, unity, dotnet or none (got "%s")' % init)
     if init == 'auto':
         bodies = re.findall(r'<AssemblerScript[^>]*>(.*?)</AssemblerScript>', src, re.S)
         uses_mono = any('aobscanregion(' in b or 'LaunchMonoDataCollector' in b for b in bodies)
@@ -311,7 +338,7 @@ def build(manifest_path, out_path=None):
                           '"=== Init Script ==="')
 
     # --- header entry
-    today = datetime.date.today().isoformat()
+    today = date or datetime.date.today().isoformat()
     tpl = re.sub(r'"Game v \| Cheat Engine Table v1\.0 \| [0-9-]+ The Cheat Script"',
                  '"%s %s | Cheat Engine Table %s | %s The Cheat Script"'
                  % (meta['game'], meta['version'], table_ver, today), tpl)
@@ -324,7 +351,7 @@ def build(manifest_path, out_path=None):
             pass
 
     # --- avoid ID collisions between template and imported children
-    tpl_ids = set(re.findall(r'<ID>(\d+)</ID>', tpl))
+    tpl_ids = entry_ids(tpl)
 
     # --- fill slots
     for cat in ('stats', 'battle', 'extra'):
@@ -344,17 +371,6 @@ def build(manifest_path, out_path=None):
                 body = header + body[body.index('[ENABLE]'):] if '[ENABLE]' in body else header + body
             children = get_children_block(entry)
 
-            key = '<Description>"%s"</Description>' % slot
-            i = tpl.index(key)
-            tpl = tpl[:i] + '<Description>"%s"</Description>' % rel_name + tpl[i + len(key):]
-            a = tpl.index('<AssemblerScript>', i) + len('<AssemblerScript>')
-            b = tpl.index('</AssemblerScript>', a)
-            tpl = tpl[:a] + body + tpl[b:]
-
-            lines = tpl.splitlines(keepends=True)
-            s_, e_ = entry_bounds(lines, '<Description>"%s"</Description>' % rel_name)
-            slot_indent = len(lines[s_]) - len(lines[s_].lstrip(' '))
-
             def take_id():
                 nid = 10000
                 while str(nid) in tpl_ids:
@@ -362,26 +378,46 @@ def build(manifest_path, out_path=None):
                 tpl_ids.add(str(nid))
                 return nid
 
+            # the slot entry, located once by its template name; everything
+            # below edits that entry's own text so a release name that is
+            # duplicated or equal to a template description cannot mislead
+            lines = tpl.splitlines(keepends=True)
+            s_, e_ = entry_bounds(lines, '<Description>"%s"</Description>' % slot)
+            slot_indent = len(lines[s_]) - len(lines[s_].lstrip(' '))
+            ent = ''.join(lines[s_:e_ + 1])
+
+            key = '<Description>"%s"</Description>' % slot
+            i = ent.index(key)
+            ent = ent[:i] + '<Description>"%s"</Description>' % rel_name + ent[i + len(key):]
+            a = ent.index('<AssemblerScript>', i) + len('<AssemblerScript>')
+            b = ent.index('</AssemblerScript>', a)
+            ent = ent[:a] + body + ent[b:]
+
             if children:
-                # remap any child IDs that collide with the template
-                for cid in set(re.findall(r'<ID>(\d+)</ID>', children)):
-                    if cid in tpl_ids:
-                        new = take_id()
-                        children = children.replace('<ID>%s</ID>' % cid, '<ID>%d</ID>' % new)
+                # remap child IDs that collide with the template (sorted:
+                # a set's order varies with the hash seed, and the JS port
+                # must produce the same bytes)
+                mapping = [(cid, take_id()) for cid in sorted(entry_ids(children), key=int)
+                           if cid in tpl_ids]
+                children = remap_entry_ids(children, mapping)
                 block = reindent_children(children, slot_indent + 2)
             else:
                 # no hand-made children: derive them from registered symbols
                 block = synth_children(body, slot_indent + 2, take_id)
             if block:
-                tpl = ''.join(lines[:e_] + [block] + lines[e_:])
+                close = ent.rindex('</CheatEntry>')
+                close = ent.rindex('\n', 0, close) + 1
+                ent = ent[:close] + block + ent[close:]
                 # a feature with sub scripts should toggle them along
-                opt_i = tpl.index('<Options', tpl.index('<Description>"%s"</Description>' % rel_name))
-                opt_j = tpl.index('/>', opt_i) + 2
-                opts = tpl[opt_i:opt_j]
+                opt_i = ent.index('<Options')
+                opt_j = ent.index('/>', opt_i) + 2
+                opts = ent[opt_i:opt_j]
                 for need in ('moActivateChildrenAsWell="1"', 'moDeactivateChildrenAsWell="1"'):
                     if need not in opts:
                         opts = opts.replace('/>', ' %s/>' % need)
-                tpl = tpl[:opt_i] + opts + tpl[opt_j:]
+                ent = ent[:opt_i] + opts + ent[opt_j:]
+
+            tpl = ''.join(lines[:s_]) + ent + ''.join(lines[e_ + 1:])
 
         # prune leftovers
         for slot in order[len(feats):]:
@@ -403,7 +439,8 @@ def build(manifest_path, out_path=None):
     # NOTE: the raw table's <Structures> section is deliberately NOT carried over.
 
     if out_path is None:
-        out_path = Path(r'D:\CE tables') / (
+        tables = Path(os.environ.get('TCS_TABLES', r'D:\CE tables'))
+        out_path = (tables if tables.is_dir() else mdir) / (
             '%s %s_Table %s_The Cheat Script.ct' % (meta['game'], meta['version'], table_ver))
     io.open(out_path, 'w', encoding='utf-8', newline='').write(tpl)
 

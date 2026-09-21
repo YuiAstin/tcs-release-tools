@@ -20,7 +20,9 @@ Built 2026-09-02.
    Alternatively prefix entry names in the raw table with `[S] ` / `[B] ` / `[E] `
    and skip the manifest sections.
 3. **Build**: `python build_release.py <manifest>` → writes
-   `D:\CE tables\<Game> <ver>_Table <tver>_The Cheat Script.ct`
+   `<Game> <ver>_Table <tver>_The Cheat Script.ct` into the CE tables folder
+   (`D:\CE tables`, or `$TCS_TABLES`; falls back to the manifest's folder).
+   `-o path.ct` overrides.
 4. **Lint**: `python check_release.py <table.ct>` — flags AOB hygiene issues
    (trailing wildcards, unmasked E8 rel32, big offsets without readmem),
    leftover slots/toolbox/structures, dead symbols, stale supporter month.
@@ -33,8 +35,10 @@ Built 2026-09-02.
 | `template.ct` | canonical template copy (update here when the template revs) |
 | `build_release.py` | manifest → release table generator |
 | `check_release.py` | release linter (errors = exit code) |
-| `tcs_template.lua` | CE auto-assembler template **+ "TCS" main-menu** (Build Release / Lint / Open Tools Folder); installed in `C:\Program Files\Cheat Engine\autorun\` — edit here, re-copy there |
-| `test_tcs_lua.py` | unit tests for the Lua core (`pip install lupa`; run `python test_tcs_lua.py`) |
+| `tcs_core.js` | the builder + linter as one JS file, loaded by the web page (kept in lock-step with the Python: see `test_parity.py`) |
+| `tcs_template.lua` | CE auto-assembler template **+ "TCS" main-menu** (Build Release / Lint / Open Tools Folder); installed in `C:\Program Files\Cheat Engine\autorun\` — edit here, re-copy there. The menu runs the Python scripts from the **tools folder** (`D:\CE tables\tools`, or `%TCS_TOOLS%`; `%TCS_TABLES%` / `%TCS_PYTHON%` likewise) |
+| `test_tcs_lua.py` | unit tests for the Lua core (`pip install -r requirements-dev.txt`; run `python test_tcs_lua.py`) |
+| `test_parity.py` | builds a fixture table through `build_release.py` AND `tcs_core.js` (needs `node`) and asserts identical bytes, matching lint reports, deterministic IDs; run `python test_parity.py` after touching either builder |
 | `lastbreath.manifest` | working example |
 
 ## Symbol-driven sub-entries (2026-09-17)
@@ -52,7 +56,7 @@ Hand-made children always win (no synthesis). Scan symbols and `*_CodeSave`
 are ignored. Names are humanized (`GodMode_Flag` → "God Mode").
 
 The release builder also strips the dev-starter scaffolding comment from
-`code:` (`// offset-agnostic form (swap in for release):` + its `//  ` byte
+`code:` (`//  offset-agnostic form (swap in for release):` + its `//    ` byte
 lines) so shipped scripts are clean. The ORIGINAL CODE reference block stays.
 
 When someone saves their work table *from* the starter, its `[ TCS Dev Starter ]`
@@ -89,15 +93,16 @@ year, note line and supporter names (each with its tier colour, preserved from
 the template). Edits persist in that browser (localStorage) and every build
 applies them.
 
-- **Export template.ct** - drop it into `tools/` to update the Python builder.
+- **Export template.ct** - drop it into the tools folder (next to
+  `build_release.py`) to update the Python builder.
 - **Export both (.zip)** - updated `template.ct` + the current `.manifest`.
 - **Save config / Load config** (build section) - the `.manifest` round-trips
   through `build_release.py`, so reloading it next version keeps categories,
   renames and slot order identical (hotkeys stay pinned).
 
 The web page ships a **copy** of `template.ct` bundled at publish time - it
-cannot read `tools/` (no filesystem access from a web page). So after exporting
-an updated template: drop it in `tools/` for the Python builder, and either send
+cannot read the tools folder (no filesystem access from a web page). So after
+exporting an updated template: drop it in the tools folder for the Python builder, and either send
 it to be republished (updates the shared default for everyone) or use
 **Use my template.ct** on the page, which loads it for that browser and
 remembers it. **Reset to bundled** goes back. The status chip always names which
@@ -107,9 +112,10 @@ Note on a live shared list: the `db` capability would make the artifact
 **organization-internal and no longer publicly shareable**, which would lock out
 teammates outside the org - so the list rides in `template.ct` instead.
 
-## Rules encoded (keep in sync with memory/aob-pattern-hygiene.md)
+## Rules encoded
 
-- offsets > 0x60: masked in AOB, rebuilt via `readmem(sym+off,4)`, restored via `<sym>_CodeSave`
+- memory displacements beyond ±0x60: masked in AOB (located by decoding
+  ModRM/SIB), rebuilt via `readmem(sym+off,n)`, restored via `<sym>_CodeSave`
 - `E8`/`E9` rel32 displacements: masked; short jcc rel8: kept
 - no trailing wildcards
 - releases never carry `<Structures>`, toolbox, niche/misc sections, or unused slots
@@ -125,3 +131,9 @@ teammates outside the org - so the list rides in `template.ct` instead.
   template-conventional; hand-flattening like we did for Last Breath is optional.
 - Init scripts: `init: auto` keeps the Unity init only if scripts use mono
   symbols (`aobscanregion`/`Class:Method`); plain `aobscanmodule` tables get none.
+  Any other value than `auto`/`unity`/`dotnet`/`none` is an error.
+- Manifest names may contain `#` (`Item #2`): only a `#` at line start, or one
+  surrounded by whitespace, starts a comment.
+- The page's "Copy table XML" fallback (used when the clipboard is blocked)
+  goes through a text box, which may hand back LF line endings; the toast
+  says so and the in-page linter catches it.
