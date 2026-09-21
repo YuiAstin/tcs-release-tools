@@ -3,7 +3,7 @@
   <CheatEntries>
     <CheatEntry>
       <ID>9418</ID>
-      <Description>"Game v | Cheat Engine Table v1.0 | 2026-08- The Cheat Script"</Description>
+      <Description>"Game v | Cheat Engine Table v1.0 | 2026-09- The Cheat Script"</Description>
       <Color>B14D00</Color>
       <GroupHeader>1</GroupHeader>
     </CheatEntry>
@@ -1977,6 +1977,203 @@ Visit my website at:
           </CheatEntries>
         </CheatEntry>
         <CheatEntry>
+          <ID>9414</ID>
+          <Description>"[Niche Usage]  == No Hotkey =="</Description>
+          <Color>FF8000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>9691</ID>
+              <Description>"[Wand Events]  == No Hotkey =="</Description>
+              <Color>FF8000</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>9692</ID>
+                  <Description>"wm_event_player_death"</Description>
+                  <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+  //add byte ptr [wm_event_player_death],1
+
+[DISABLE]
+
+</AssemblerScript>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9429</ID>
+              <Description>"TCS.NU"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <Color>808000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9432</ID>
+              <Description>"TCS.NU"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <Color>808000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9430</ID>
+              <Description>"TCS.NU"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <Color>808000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9425</ID>
+              <Description>"=== Test Script ==="</Description>
+              <Color>008080</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>9426</ID>
+                  <Description>"Code Vault"</Description>
+                  <Options moHideChildren="1"/>
+                  <Color>008080</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*===============================
+--- Place codes below ---
+
+===============================*/
+[ENABLE]
+
+[DISABLE]
+</AssemblerScript>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9427</ID>
+                  <Description>"Test Script [No Hotkey][Store in Unused]"</Description>
+                  <Options moHideChildren="1"/>
+                  <Color>008080</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9428</ID>
+                  <Description>"Test Script [No Hotkey][Store in Unused]"</Description>
+                  <Options moHideChildren="1"/>
+                  <Color>008080</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+
+[DISABLE]
+
+</AssemblerScript>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
           <ID>9409</ID>
           <Description>"[Game Speed]"</Description>
           <Color>FF8000</Color>
@@ -2043,6 +2240,36 @@ luacall(speedhack_setSpeed(1))
                   <DeactivateSound>Deactivate</DeactivateSound>
                 </Hotkey>
               </Hotkeys>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>117</ID>
+          <Description>"[Misc.][!]"</Description>
+          <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+          <Color>0000FF</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>9107</ID>
+              <Description>"Proceed With Cautions! This section is for Advanced User Only"</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <Color>0000FF</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>8266</ID>
+              <Description>"[Backups][Unused]"</Description>
+              <Options moHideChildren="1"/>
+              <Color>C0C0C0</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>8435</ID>
+              <Description>"[Obsolete][Buggy]"</Description>
+              <Options moHideChildren="1"/>
+              <Color>C0C0C0</Color>
+              <GroupHeader>1</GroupHeader>
             </CheatEntry>
           </CheatEntries>
         </CheatEntry>
@@ -2197,7 +2424,7 @@ luacall(speedhack_setSpeed(1))
       <CheatEntries>
         <CheatEntry>
           <ID>9236</ID>
-          <Description>"-------               July 2026 Supporters                -------"</Description>
+          <Description>"-------               August 2026 Supporters                -------"</Description>
           <Options moHideChildren="1"/>
           <Color>0066FF</Color>
           <GroupHeader>1</GroupHeader>
@@ -2240,7 +2467,7 @@ luacall(speedhack_setSpeed(1))
             </CheatEntry>
             <CheatEntry>
               <ID>9664</ID>
-              <Description>"Err0r"</Description>
+              <Description>"Ame"</Description>
               <Color>004080</Color>
               <GroupHeader>1</GroupHeader>
             </CheatEntry>
@@ -2311,6 +2538,1153 @@ ShellExecute('https://www.thecheatscript.com')
 [ENABLE]
 [DISABLE]
 </AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>9081</ID>
+      <Description>"[TOOLBOX/TEMPLATES v6.0]  -  DELETE THIS BEFORE RELEASING  -"</Description>
+      <Options moHideChildren="1"/>
+      <Color>0000FF</Color>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>9104</ID>
+          <Description>"======= [Script Template/Code Library] ======="</Description>
+          <Color>FF8000</Color>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>========================================
+===== Fast Alloc
+========================================
+//------- Common variables -------
+[ENABLE]
+alloc(_Base,8)        //Always 8 bytes
+registersymbol(_Base)
+alloc(_Mult,8)
+registersymbol(_Mult)
+
+_Mult:
+dd 7
+
+[DISABLE]
+unregistersymbol(*)
+dealloc(*)
+
+//------- Set variable to register -------
+alloc(_Set,8)        //8 bytes
+_Set:
+dq (double)?
+dd (float)?
+
+movsd xmm?,[_Set]
+movss xmm?,[_Set]
+
+========================================
+===== Code Save / Readmem
+========================================
+//------- Generic code saver -------
+alloc(_CodeSave,Size)
+_CodeSave:
+  readmem(TargetCode,Size)
+registersymbol(_CodeSave)
+
+unregistersymbol(_CodeSave)
+dealloc(_CodeSave)
+
+//------- Add max to current -------
+  push rdi
+  lea rdi,[rax+current_offset]
+  movss xmm0,[rdi+max_offset_difference]
+  movss [rdi],xmm0
+  pop rdi
+//Convert all to db bytes after writing
+========================================
+===== Handle Jump Instructions In Region
+========================================
+[ENABLE]
+//------- For short jump -------
+  jcd return+?
+  jmp return+?
+  //Recalculate the value relative to return &amp; original range
+
+//------- For far jump -------
+label(FarJumpHelper)
+
+jcd FarJumpHelper  //jmp conditioned
+
+FarJumpHelper:
+  jmp return+?     //recalculate the original range
+
+========================================
+===== XMMs Handling
+========================================
+//------- Modify xmms register -------
+  push (float)x
+  fld [rsp]
+  movss xmm?,[rsp]
+  fstp st(0)
+  add rsp,8
+  //Convert xmms Float to Double and vice versa
+  cvtss2sd xmm?,xmm?   //float to double
+  cvtsd2ss xmm?,xmm?   //double to float
+
+//------- Modify Double data -------
+  push #x  //(int)
+  fild [rsp]
+  fstp qword ptr [rax+??]
+  add rsp,8
+
+  //for 32-bit games
+  push #x      //(int)
+  fild [esp]
+  fstp qword ptr [eax+??]
+  add esp,4
+//------- Clear Register/Set Register = 0 -------
+  xor rax,rax
+  xorps xmm?,xmm?
+
+  fldz //Load 0 to stack
+  fld1 //Load 1.0 to stack
+
+//------- Push &amp; Pop preserve xmms register -------
+//push
+  sub esp,10
+  movdqu [esp],xmm?
+//pop
+  movdqu xmm?,[esp]
+  add esp,10
+
+//------- Compare xmms register -------
+  comiss xmm?,xmm?
+  comiss xmm?,[rax+?]
+  ucomiss xmm?,xmm?
+  ucomiss xmm?,[rax+?]
+
+  jl, jg will not work - use jb, ja instead
+
+//------- Check Negative Value -------
+alloc(Zero,4)         // if registers aren't free and must be preserved
+//double value xmm
+  ucomisd xmm?,xmm15  // make sure xmm15 is always 0
+  jae code
+  comisd xmm0,[Zero]  // compare xmm0 with 0
+  ja code             // jump to code if xmm0 is negative
+//float value xmm
+  ucomiss xmm?,xmm15  // make sure xmm15 is always 0
+  jae code
+  comiss xmm0,[Zero]  // compare xmm0 with 0
+  ja code             // jump to code if xmm0 is negative
+//int register
+  cmp eax, 0          // compare eax to 0
+  jns my_label        // jump to my_label if eax is not negative
+  cmp rax, 0          // compare rax to 0
+  js code             // jump to code if rax is negative
+
+========================================
+===== In case of crash
+========================================
+//=== Common fixes ===
+//--- Mainly for uncontrollable multilevel pointers
+  test r??,r??
+  je code
+
+Example:
+  test rdi,rdi
+  je code
+
+//=== Try, Except ===
+//--- For everything that caused a crash
+newmem:
+  push ??
+{$try}
+  // your code here
+{$except}
+code:
+  pop ??
+
+//=== Call Is Bad Read Pointer ===
+call IsBadReadPtr
+cmp eax,00
+jnz code
+
+========================================
+===== Miscellaneous
+========================================
+  //Complex Breakpoint Condition
+  return (RAX &gt;= 0x6e) or (RBX &lt;=0x5f)
+
+  //Convert int to float
+  cvtsi2ss xmm7,[rax+4]
+
+  //Convert float to int
+  cvttss2si rax,[rax+00000004]
+
+  //Get Unity il2cpp name
+  print(getNameFromAddress('Address', true, true, true))
+  print(getNameFromAddress(Address, false, false, true))
+
+  //Complex conditioned breakpoint
+  if RSP~=0x0000001BD3EEE6E8 and RSP~=0x0000001BD3EEE4D8 then
+      return 1
+  else
+
+  end
+  //Read value in hex of the pointer in register
+  readInteger(EDX)==0x?  --//4 bytes
+  bAnd(readInteger(EDX),0xff)==0x?  --//1 byte
+  -- is comment in lua
+
+================================================================================
+===== For Unity Engine
+================================================================================
+//=== Activation for GameAssembly.dll ===
+{$lua}
+if syntaxcheck then
+    return
+end
+if (process ~= nil) then
+  if not loadingmono then
+    loadingmono=true
+    LaunchMonoDataCollector()
+  end
+  while not monoSymbolList do sleep(10) end --monoSymbolList could be nil
+  while not monoSymbolList.FullyLoaded do sleep(10) end
+end
+{$asm}
+
+================================================================================
+===== For Unreal Engine
+================================================================================
+//=== Common Finds ===
+LocalPlayers | PlayerController | Character | CharacterMovement
+[ENABLE]
+[DISABLE]
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>9394</ID>
+          <Description>"======= [Init Flag Script Templates wHotkeys] ======="</Description>
+          <Color>FF8000</Color>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>========================================
+===== Common Script wFlag
+========================================
+[ENABLE]
+alloc(_Flag,4)
+registersymbol(_Flag)
+
+_Flag:
+dd 0
+
+newmem:
+  cmp [_Flag],1
+  jne @f
+
+@@:
+
+code:
+
+[DISABLE]
+unregistersymbol(_Flag)
+dealloc(_Flag)
+
+========================================
+===== "Get Money Data" Script
+========================================
+//--- Unlimited Money &amp; Dynamic Pointer ---
+[ENABLE]
+alloc(Money_Edit,8)
+registersymbol(Money_Edit)
+alloc(Money_Flag,4)
+registersymbol(Money_Flag)
+
+Money_Flag:
+dd 0
+
+alloc(Money_CodeSave,Size)
+Money_CodeSave:
+  readmem(TargetCode,Size)
+registersymbol(Money_CodeSave)
+
+newmem:
+  push rdi
+  lea rdi,[+x]
+  mov [Money_Edit],rdi
+  cmp [Money_Flag],1
+  jne @f
+  mov [rdi],#777777777  //(float)777777777
+code:
+  pop rdi
+
+[DISABLE]
+unregistersymbol(*)
+dealloc(*)
+
+========================================
+===== "Get HP Data" Script
+========================================
+//--- God Mode &amp; Instant Kill ---
+[ENABLE]
+label(GodMode)
+label(InstantKill)
+
+registersymbol(GodMode_Flag)
+registersymbol(InstantKill_Flag)
+registersymbol(Damage_Mult)
+alloc(GodMode_Flag,4)
+alloc(InstantKill_Flag,4)
+alloc(Damage_Mult,4)
+
+GodMode_Flag:
+dd 0
+InstantKill_Flag:
+dd 0
+Damage_Mult:
+dd 0
+
+newmem:
+  cmp dword ptr [rax+000000xx],1  //check is Player
+  je @f  //jmp if player
+
+  cmp dword ptr [InstantKill_Flag],1
+  je InstantKill
+
+/*_remove_this_line_
+  cmp [Damage_Mult],0
+  je code
+  imul damage_register,[Damage_Mult]
+  mulss damage_register,[Damage_Mult]
+_remove_this_line_*/
+
+  jmp code
+@@:
+  cmp dword ptr [GodMode_Flag],1
+  je GodMode
+
+//----------------------------
+code: //Place below code
+
+GodMode:
+
+  jmp code/return
+InstantKill:
+
+  jmp code/return
+
+[DISABLE]
+unregistersymbol(*)
+dealloc(*)
+
+
+registersymbol(InstantKill_Flag)
+registersymbol(Damage_Mult)
+alloc(InstantKill_Flag,4)
+alloc(Damage_Mult,4)
+
+========================================
+===== "Get Enemy HP Data" Script
+========================================
+//--- Standalone Instant Kill &amp; Damage Multiplier ---
+[ENABLE]
+registersymbol(InstantKill_Flag)
+registersymbol(Damage_Mult)
+alloc(InstantKill_Flag,4)
+alloc(Damage_Mult,4)
+
+InstantKill_Flag:
+dd 0
+Damage_Mult:
+dd 0
+
+newmem:
+  cmp [Damage_Mult],0
+  je @f
+  imul rax,[Damage_Mult]
+  mulss xmm0,[Damage_Mult]
+@@:
+  cmp dword ptr [InstantKill_Flag],1
+  jne @f
+  //Kill code
+
+code:
+
+[DISABLE]
+unregistersymbol(*)
+dealloc(*)
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>9593</ID>
+              <Description>"------- Flag/Multiplier Script Templates wHotkeys -------"</Description>
+              <Options moHideChildren="1" moDefaultCollapsed="1" moManualExpandCollapse="1" moAllowManualCollapseAndExpand="1"/>
+              <Color>808000</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>9687</ID>
+                  <Description>"Multiply Money Get"</Description>
+                  <Options moDeactivateChildrenAsWell="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+alloc(Money_Mult,8)
+registersymbol(Money_Mult)
+
+Money_Mult:
+dd 7
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>45</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>46</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>98</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>9686</ID>
+                      <Description>"Money Multiplier"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>Money_Mult</Address>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9688</ID>
+                  <Description>"Multiply EXP Gain"</Description>
+                  <Options moDeactivateChildrenAsWell="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+alloc(EXP_Mult,8)
+registersymbol(EXP_Mult)
+
+EXP_Mult:
+dd 7
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>45</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>46</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>99</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>9666</ID>
+                      <Description>"EXP Multiplier"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>EXP_Mult</Address>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9696</ID>
+                  <Description>"Multiply Move Speed"</Description>
+                  <Options moDeactivateChildrenAsWell="1"/>
+                  <Color>808000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>/*=================================================
+--- Cheat Script by ColonelRVH ---
+🕊️ Please Support my work at:
+  https://patreon.com/TheCheatScript
+  https://ko-fi.com/ColonelRVH
+
+🔗 Latest Game Updates:
+  https://www.thecheatscript.com
+
+🔓 Terms:
+  Free for the community to learn, modify, and share.
+  Retaining original credits is required;
+  do not re-upload or claim as your own.
+=================================================*/
+[ENABLE]
+alloc(MoveSpeed_Mult,8)
+registersymbol(MoveSpeed_Mult)
+
+MoveSpeed_Mult:
+dd (float)2
+[DISABLE]
+
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Activate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>45</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>46</Key>
+                      </Keys>
+                      <ID>1</ID>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>99</Key>
+                      </Keys>
+                      <ID>2</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>9697</ID>
+                      <Description>"Move Speed Multiplier"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Float</VariableType>
+                      <Address>MoveSpeed_Mult</Address>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9400</ID>
+                  <Description>"[Sub Scripts]  -- Toggle: Scroll Lock --"</Description>
+                  <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
+                  <Color>808000</Color>
+                  <GroupHeader>1</GroupHeader>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>145</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>9398</ID>
+                      <Description>"God Mode/Unlimited HP"</Description>
+                      <Color>808000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+Godmode_Flag:
+dd 1
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+Godmode_Flag:
+dd 0
+</AssemblerScript>
+                      <Hotkeys>
+                        <Hotkey>
+                          <Action>Toggle Activation</Action>
+                          <Keys>
+                            <Key>145</Key>
+                          </Keys>
+                          <ID>0</ID>
+                          <ActivateSound>Activate</ActivateSound>
+                          <DeactivateSound>Deactivate</DeactivateSound>
+                        </Hotkey>
+                      </Hotkeys>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9399</ID>
+                      <Description>"Instant Kill"</Description>
+                      <Color>808000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+InstantKill_Flag:
+dd 1
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+InstantKill_Flag:
+dd 0
+</AssemblerScript>
+                      <Hotkeys>
+                        <Hotkey>
+                          <Action>Toggle Activation</Action>
+                          <Keys>
+                            <Key>145</Key>
+                          </Keys>
+                          <ID>0</ID>
+                          <ActivateSound>Activate</ActivateSound>
+                          <DeactivateSound>Deactivate</DeactivateSound>
+                        </Hotkey>
+                      </Hotkeys>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9659</ID>
+                      <Description>"Damage Multiplier"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>Damage_Mult</Address>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9580</ID>
+                  <Description>"[Sub Scripts]  -- Toggle: Alt + \  --"</Description>
+                  <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
+                  <Color>808000</Color>
+                  <GroupHeader>1</GroupHeader>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>220</Key>
+                      </Keys>
+                      <ID>0</ID>
+                      <ActivateSound>Activate</ActivateSound>
+                      <DeactivateSound>Deactivate</DeactivateSound>
+                    </Hotkey>
+                  </Hotkeys>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>9381</ID>
+                      <Description>"Toggle Individual Script by Ctrl + F(1-12)"</Description>
+                      <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
+                      <Color>808000</Color>
+                      <GroupHeader>1</GroupHeader>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9650</ID>
+                      <Description>"Unlimited Money"</Description>
+                      <Color>808000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+Money_Flag:
+dd 1
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+Money_Flag:
+dd 0
+</AssemblerScript>
+                      <Hotkeys>
+                        <Hotkey>
+                          <Action>Toggle Activation</Action>
+                          <Keys>
+                            <Key>17</Key>
+                            <Key>112</Key>
+                          </Keys>
+                          <ID>0</ID>
+                          <ActivateSound>Activate</ActivateSound>
+                          <DeactivateSound>Deactivate</DeactivateSound>
+                        </Hotkey>
+                      </Hotkeys>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9657</ID>
+                      <Description>"Money"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>[Money_Edit]</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9395</ID>
+                      <Description>"Flag Script 01"</Description>
+                      <Color>808000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+_Flag:
+dd 1
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_Flag:
+dd 0
+</AssemblerScript>
+                      <Hotkeys>
+                        <Hotkey>
+                          <Action>Toggle Activation</Action>
+                          <Keys>
+                            <Key>17</Key>
+                            <Key>112</Key>
+                          </Keys>
+                          <ID>0</ID>
+                          <ActivateSound>Activate</ActivateSound>
+                          <DeactivateSound>Deactivate</DeactivateSound>
+                        </Hotkey>
+                      </Hotkeys>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9377</ID>
+                      <Description>"Flag Script 02"</Description>
+                      <Color>808000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+_Flag:
+dd 1
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_Flag:
+dd 0
+</AssemblerScript>
+                      <Hotkeys>
+                        <Hotkey>
+                          <Action>Toggle Activation</Action>
+                          <Keys>
+                            <Key>17</Key>
+                            <Key>113</Key>
+                          </Keys>
+                          <ID>0</ID>
+                          <ActivateSound>Activate</ActivateSound>
+                          <DeactivateSound>Deactivate</DeactivateSound>
+                        </Hotkey>
+                      </Hotkeys>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9423</ID>
+                  <Description>"ZA WARUDO! [Time Stop]"</Description>
+                  <Color>808000</Color>
+                  <GroupHeader>1</GroupHeader>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>9346</ID>
+                      <Description>"https://www.youtube.com/watch?v=7ePWNmLP0Z0"</Description>
+                      <Options moHideChildren="1"/>
+                      <Color>808000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>{$lua}
+if syntaxcheck then return end
+ShellExecute('https://www.youtube.com/watch?v=7ePWNmLP0Z0')
+{$asm}
+[ENABLE]
+
+[DISABLE]
+</AssemblerScript>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9585</ID>
+                  <Description>"[Sub Script Extra+]"</Description>
+                  <Options moHideChildren="1" moDefaultCollapsed="1" moManualExpandCollapse="1" moAllowManualCollapseAndExpand="1"/>
+                  <Color>FF8000</Color>
+                  <GroupHeader>1</GroupHeader>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>9376</ID>
+                      <Description>"Flag Script 03"</Description>
+                      <Color>808000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+_Flag:
+dd 1
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_Flag:
+dd 0
+</AssemblerScript>
+                      <Hotkeys>
+                        <Hotkey>
+                          <Action>Toggle Activation</Action>
+                          <Keys>
+                            <Key>17</Key>
+                            <Key>114</Key>
+                          </Keys>
+                          <ID>0</ID>
+                          <ActivateSound>Activate</ActivateSound>
+                          <DeactivateSound>Deactivate</DeactivateSound>
+                        </Hotkey>
+                      </Hotkeys>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9375</ID>
+                      <Description>"Flag Script 04"</Description>
+                      <Color>808000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+_Flag:
+dd 1
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_Flag:
+dd 0
+</AssemblerScript>
+                      <Hotkeys>
+                        <Hotkey>
+                          <Action>Toggle Activation</Action>
+                          <Keys>
+                            <Key>17</Key>
+                            <Key>115</Key>
+                          </Keys>
+                          <ID>0</ID>
+                          <ActivateSound>Activate</ActivateSound>
+                          <DeactivateSound>Deactivate</DeactivateSound>
+                        </Hotkey>
+                      </Hotkeys>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9374</ID>
+                      <Description>"Flag Script 05"</Description>
+                      <Color>808000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+_Flag:
+dd 1
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_Flag:
+dd 0
+</AssemblerScript>
+                      <Hotkeys>
+                        <Hotkey>
+                          <Action>Toggle Activation</Action>
+                          <Keys>
+                            <Key>17</Key>
+                            <Key>116</Key>
+                          </Keys>
+                          <ID>0</ID>
+                          <ActivateSound>Activate</ActivateSound>
+                          <DeactivateSound>Deactivate</DeactivateSound>
+                        </Hotkey>
+                      </Hotkeys>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9373</ID>
+                      <Description>"Flag Script 06"</Description>
+                      <Color>808000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+_Flag:
+dd 1
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_Flag:
+dd 0
+</AssemblerScript>
+                      <Hotkeys>
+                        <Hotkey>
+                          <Action>Toggle Activation</Action>
+                          <Keys>
+                            <Key>17</Key>
+                            <Key>117</Key>
+                          </Keys>
+                          <ID>0</ID>
+                          <ActivateSound>Activate</ActivateSound>
+                          <DeactivateSound>Deactivate</DeactivateSound>
+                        </Hotkey>
+                      </Hotkeys>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9372</ID>
+                      <Description>"Flag Script 07"</Description>
+                      <Color>808000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+_Flag:
+dd 1
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_Flag:
+dd 0
+</AssemblerScript>
+                      <Hotkeys>
+                        <Hotkey>
+                          <Action>Toggle Activation</Action>
+                          <Keys>
+                            <Key>17</Key>
+                            <Key>118</Key>
+                          </Keys>
+                          <ID>0</ID>
+                          <ActivateSound>Activate</ActivateSound>
+                          <DeactivateSound>Deactivate</DeactivateSound>
+                        </Hotkey>
+                      </Hotkeys>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9371</ID>
+                      <Description>"Flag Script 08"</Description>
+                      <Color>808000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+_Flag:
+dd 1
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_Flag:
+dd 0
+</AssemblerScript>
+                      <Hotkeys>
+                        <Hotkey>
+                          <Action>Toggle Activation</Action>
+                          <Keys>
+                            <Key>17</Key>
+                            <Key>119</Key>
+                          </Keys>
+                          <ID>0</ID>
+                          <ActivateSound>Activate</ActivateSound>
+                          <DeactivateSound>Deactivate</DeactivateSound>
+                        </Hotkey>
+                      </Hotkeys>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9370</ID>
+                      <Description>"Flag Script 09"</Description>
+                      <Color>808000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+_Flag:
+dd 1
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_Flag:
+dd 0
+</AssemblerScript>
+                      <Hotkeys>
+                        <Hotkey>
+                          <Action>Toggle Activation</Action>
+                          <Keys>
+                            <Key>17</Key>
+                            <Key>120</Key>
+                          </Keys>
+                          <ID>0</ID>
+                          <ActivateSound>Activate</ActivateSound>
+                          <DeactivateSound>Deactivate</DeactivateSound>
+                        </Hotkey>
+                      </Hotkeys>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9369</ID>
+                      <Description>"Flag Script 10"</Description>
+                      <Color>808000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+_Flag:
+dd 1
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_Flag:
+dd 0
+</AssemblerScript>
+                      <Hotkeys>
+                        <Hotkey>
+                          <Action>Toggle Activation</Action>
+                          <Keys>
+                            <Key>17</Key>
+                            <Key>121</Key>
+                          </Keys>
+                          <ID>0</ID>
+                          <ActivateSound>Activate</ActivateSound>
+                          <DeactivateSound>Deactivate</DeactivateSound>
+                        </Hotkey>
+                      </Hotkeys>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9379</ID>
+                      <Description>"Flag Script 11"</Description>
+                      <Color>808000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+_Flag:
+dd 1
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_Flag:
+dd 0
+</AssemblerScript>
+                      <Hotkeys>
+                        <Hotkey>
+                          <Action>Toggle Activation</Action>
+                          <Keys>
+                            <Key>17</Key>
+                            <Key>122</Key>
+                          </Keys>
+                          <ID>0</ID>
+                          <ActivateSound>Activate</ActivateSound>
+                          <DeactivateSound>Deactivate</DeactivateSound>
+                        </Hotkey>
+                      </Hotkeys>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>9378</ID>
+                      <Description>"Flag Script 12"</Description>
+                      <Color>808000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+_Flag:
+dd 1
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_Flag:
+dd 0
+</AssemblerScript>
+                      <Hotkeys>
+                        <Hotkey>
+                          <Action>Toggle Activation</Action>
+                          <Keys>
+                            <Key>17</Key>
+                            <Key>123</Key>
+                          </Keys>
+                          <ID>0</ID>
+                          <ActivateSound>Activate</ActivateSound>
+                          <DeactivateSound>Deactivate</DeactivateSound>
+                        </Hotkey>
+                      </Hotkeys>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9582</ID>
+                  <Description>"[Pointers List]"</Description>
+                  <Options moHideChildren="1"/>
+                  <Color>FF8000</Color>
+                  <GroupHeader>1</GroupHeader>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>9579</ID>
+          <Description>"======= General Notices/Warnings ======="</Description>
+          <Options moManualExpandCollapse="1" moDeactivateChildrenAsWell="1" moAllowManualCollapseAndExpand="1"/>
+          <Color>0000FF</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>9223</ID>
+              <Description>"Make sure Game World is loaded before Activation!"</Description>
+              <Color>0000FF</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9578</ID>
+              <Description>"If cheats activation failed, restart &amp; activate at main menu before loading save."</Description>
+              <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+              <Color>0000FF</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>9293</ID>
+          <Description>"------- Extra Data -------"</Description>
+          <Options moHideChildren="1" moDefaultCollapsed="1" moManualExpandCollapse="1" moAllowManualCollapseAndExpand="1"/>
+          <Color>808000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>9433</ID>
+              <Description>"--- Data List ---"</Description>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+          </CheatEntries>
         </CheatEntry>
       </CheatEntries>
     </CheatEntry>
